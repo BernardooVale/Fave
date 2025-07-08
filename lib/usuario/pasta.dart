@@ -7,6 +7,7 @@ import '../ed.dart';
 import '../itens/item.dart';
 import 'novoItemDialog.dart'; // para showAddOptionDialog
 import 'filtro.dart';
+import 'deletarItens.dart';
 
 class PastaPage extends StatefulWidget {
   final Pasta pasta;
@@ -89,11 +90,36 @@ class _PastaPageState extends State<PastaPage> {
         )
             : null,
         actions: [
-          if (!selecionando)
+          if (selecionando)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              tooltip: 'Excluir itens selecionados',
+              onPressed: () async {
+                await deletarSelecionadosGenerico(
+                  context: context,
+                  target: widget.pasta,
+                  userBox: widget.userBox,
+                  selecionados: selecionados,
+                );
+                setState(() {
+                  selecionando = false;
+                  selecionados.clear();
+                });
+              },
+            )
+          else ...[
             IconButton(
               icon: Icon(isVisible ? Icons.visibility : Icons.visibility_off),
+              tooltip: isVisible ? 'Ocultar senhas' : 'Mostrar senhas',
               onPressed: () => setState(() => isVisible = !isVisible),
             ),
+            IconButton(
+              icon: const Icon(Icons.edit),
+              tooltip: 'Editar usuário',
+              onPressed: () {
+              },
+            ),
+          ]
         ],
       ),
       body: ListView.builder(

@@ -8,6 +8,7 @@ import '../cores.dart';
 import '../itens/item.dart';
 import 'novoItemDialog.dart';
 import 'filtro.dart';
+import 'deletarItens.dart';
 
 // Importe a página PastaPage
 import 'pasta.dart';
@@ -134,17 +135,36 @@ class _UsuarioPageState extends State<UsuarioPage> {
         )
             : null,
         actions: [
-          if (!selecionando)
+          if (selecionando)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              tooltip: 'Excluir itens selecionados',
+              onPressed: () async {
+                await deletarSelecionadosGenerico(
+                  context: context,
+                  target: usuario,
+                  userBox: userBox,
+                  selecionados: selecionados,
+                );
+                setState(() {
+                  selecionando = false;
+                  selecionados.clear();
+                });
+              },
+            )
+          else ...[
             IconButton(
               icon: Icon(isVisible ? Icons.visibility : Icons.visibility_off),
               tooltip: isVisible ? 'Ocultar senhas' : 'Mostrar senhas',
               onPressed: () => setState(() => isVisible = !isVisible),
             ),
-          IconButton(
-            icon: const Icon(Icons.edit),
-            tooltip: 'Editar usuário',
-            onPressed: () {},
-          ),
+            IconButton(
+              icon: const Icon(Icons.edit),
+              tooltip: 'Editar usuário',
+              onPressed: () {
+              },
+            ),
+          ]
         ],
       ),
       body: ListView.builder(
