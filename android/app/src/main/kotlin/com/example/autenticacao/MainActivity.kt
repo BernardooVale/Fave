@@ -1,0 +1,6 @@
+package com.example.autenticacao
+
+import io.flutter.embedding.android.FlutterFragmentActivity
+
+class MainActivity: FlutterFragmentActivity() {
+}
