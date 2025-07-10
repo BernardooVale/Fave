@@ -40,7 +40,7 @@ Future<void> showAddOptionDialog({
               onTap: () => Navigator.pop(context, 'pasta'),
             ),
             ListTile(
-              leading: const Icon(Icons.lock, color: AppColors.primaria),
+              leading: const Icon(Icons.vpn_key, color: AppColors.primaria),
               title: const Text(
                 'Criar Senha',
                 style: TextStyle(color: Colors.white),
@@ -153,76 +153,80 @@ Future<void> showCreateFolderSheet({
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
-    builder: (context) => Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-        left: 24,
-        right: 24,
-        top: 24,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Nova Pasta',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 20),
-          TextField(
-            controller: nomeController,
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              labelText: 'Nome da pasta',
-              labelStyle: TextStyle(color: Colors.white70),
-              filled: true,
-              fillColor: AppColors.pasta.withOpacity(0.1),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: AppColors.pasta, width: 2),
+    builder: (context) => GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          left: 24,
+          right: 24,
+          top: 24,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Nova Pasta',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          const SizedBox(height: 28),
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.secundaria,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+            const SizedBox(height: 20),
+            TextField(
+              controller: nomeController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Nome da pasta',
+                labelStyle: TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: AppColors.pasta.withOpacity(0.1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                elevation: 4,
-                shadowColor: AppColors.secundaria.withOpacity(0.6),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppColors.pasta, width: 2),
+                ),
               ),
-              child: const Text(
-                'Salvar',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
-              ),
-              onPressed: () async {
-                final nome = nomeController.text.trim();
-                if (nome.isEmpty) return;
-
-                await addFolder(
-                  userBox: userBox,
-                  target: target,
-                  nome: nome,
-                  onUpdate: onUpdate,
-                );
-                Navigator.pop(context);
-              },
             ),
-          ),
-          const SizedBox(height: 16),
-        ],
+            const SizedBox(height: 28),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.secundaria,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                  elevation: 4,
+                  shadowColor: AppColors.secundaria.withOpacity(0.6),
+                ),
+                child: const Text(
+                  'Salvar',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                ),
+                onPressed: () async {
+                  final nome = nomeController.text.trim();
+                  if (nome.isEmpty) return;
+
+                  await addFolder(
+                    userBox: userBox,
+                    target: target,
+                    nome: nome,
+                    onUpdate: onUpdate,
+                  );
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     ),
   );
@@ -302,133 +306,137 @@ Future<void> showCreatePasswordSheet({
       double forcaSenha = 0;
 
       return StatefulBuilder(
-        builder: (context, setState) => Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-            left: 24,
-            right: 24,
-            top: 24,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Nova Senha',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: nomeController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'Nome da senha',
-                  labelStyle: TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: AppColors.primaria.withOpacity(0.1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: AppColors.primaria, width: 2),
+        builder: (context, setState) => GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              left: 24,
+              right: 24,
+              top: 24,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Nova Senha',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: senhaController,
-                obscureText: true,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'Senha',
-                  labelStyle: TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: AppColors.primaria.withOpacity(0.1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: AppColors.primaria, width: 2),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: nomeController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Nome da senha',
+                    labelStyle: TextStyle(color: Colors.white70),
+                    filled: true,
+                    fillColor: AppColors.primaria.withOpacity(0.1),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: AppColors.primaria, width: 2),
+                    ),
                   ),
                 ),
-                onChanged: (senha) {
-                  setState(() {
-                    forcaSenha = calcularForcaSenha(senha);
-                  });
-                },
-              ),
-              const SizedBox(height: 8),
-              barraForcaSenha(forcaSenha),
-              const SizedBox(height: 28),
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      await showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: AppColors.fundo,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: senhaController,
+                  obscureText: true,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    labelStyle: TextStyle(color: Colors.white70),
+                    filled: true,
+                    fillColor: AppColors.primaria.withOpacity(0.1),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: AppColors.primaria, width: 2),
+                    ),
+                  ),
+                  onChanged: (senha) {
+                    setState(() {
+                      forcaSenha = calcularForcaSenha(senha);
+                    });
+                  },
+                ),
+                const SizedBox(height: 8),
+                barraForcaSenha(forcaSenha),
+                const SizedBox(height: 28),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        await showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: AppColors.fundo,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                          ),
+                          builder: (context) => SenhaAleatoriaPopup(
+                            onSenhaGerada: (senha) {
+                              // Aqui você recebe a senha gerada e preenche o campo
+                              senhaController.text = senha;
+                            },
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Senha aleatória',
+                        style: TextStyle(
+                          color: AppColors.mel,
+                          fontWeight: FontWeight.w600,
                         ),
-                        builder: (context) => SenhaAleatoriaPopup(
-                          onSenhaGerada: (senha) {
-                            // Aqui você recebe a senha gerada e preenche o campo
-                            senhaController.text = senha;
-                          },
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Senha aleatória',
-                      style: TextStyle(
-                        color: AppColors.terciaria,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  const Spacer(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.secundaria,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                    const Spacer(),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.secundaria,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        elevation: 4,
+                        shadowColor: AppColors.secundaria.withOpacity(0.6),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                      elevation: 4,
-                      shadowColor: AppColors.secundaria.withOpacity(0.6),
-                    ),
-                    child: const Text(
-                      'Salvar',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
-                    ),
-                    onPressed: () async {
-                      final nome = nomeController.text.trim();
-                      final senha = senhaController.text.trim();
-                      if (nome.isEmpty || senha.isEmpty) return;
+                      child: const Text(
+                        'Salvar',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        final nome = nomeController.text.trim();
+                        final senha = senhaController.text.trim();
+                        if (nome.isEmpty || senha.isEmpty) return;
 
-                      await addPassword(
-                        userBox: userBox,
-                        target: target,
-                        nome: nome,
-                        senha: senha,
-                        onUpdate: onUpdate,
-                      );
+                        await addPassword(
+                          userBox: userBox,
+                          target: target,
+                          nome: nome,
+                          senha: senha,
+                          onUpdate: onUpdate,
+                        );
 
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-            ],
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       );

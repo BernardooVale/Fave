@@ -1,3 +1,4 @@
+import 'package:autenticacao/cores.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../ed.dart';
@@ -28,7 +29,7 @@ Future<void> showAddUserDialog({
                 const Text('Novo Usuário', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 IconButton(
                   iconSize: 28,
-                  icon: Icon(Icons.close, color: cs.primary),
+                  icon: Icon(Icons.close, color: AppColors.mel),
                   tooltip: 'Fechar',
                   onPressed: () => Navigator.of(context).pop(),
                 ),

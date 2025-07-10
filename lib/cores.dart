@@ -6,4 +6,5 @@ class AppColors {
   static const Color terciaria = Color(0xFFC33C5F);
   static const Color fundo = Color(0xFF242323);
   static const Color pasta = Color(0xFFE19810);
+  static const Color mel = Color(0xFFCC8F00);
 }
