@@ -20,7 +20,7 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
   bool usarNumeros = true;
   bool usarEspeciais = true;
 
-  final especiais = '!@#\$%';
+  final especiais = '!@#\$%&*()/-+={}[],<>.:;?|';
 
   @override
   void initState() {

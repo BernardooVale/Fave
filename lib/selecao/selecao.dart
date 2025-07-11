@@ -13,17 +13,35 @@ class Selecao extends StatefulWidget {
   State<Selecao> createState() => _SelecaoState();
 }
 
-class _SelecaoState extends State<Selecao> {
+class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
   late Box<Usuario> usuariosBox;
   bool loading = true;
+  String filtro = '';
+  bool mostrandoBusca = false;
+
+  final TextEditingController _buscaCtrl = TextEditingController();
+  final FocusNode _buscaFocus = FocusNode();
 
   final Set<int> selecionados = {};
   bool get selecionando => selecionados.isNotEmpty;
 
+  // Para animar opacidade da lista
+  late final AnimationController _fadeController;
+  late final Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
+
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    _fadeAnimation = CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut);
+
     _init();
+    _fadeController.forward();
   }
 
   Future<void> _init() async {
@@ -67,9 +85,47 @@ class _SelecaoState extends State<Selecao> {
     }
   }
 
+  void _toggleBusca() {
+    setState(() {
+      mostrandoBusca = !mostrandoBusca;
+      if (!mostrandoBusca) {
+        filtro = '';
+        _buscaCtrl.clear();
+        _buscaFocus.unfocus();
+        _fadeController.forward();
+      } else {
+        // Abre teclado e foca campo após pequeno delay
+        Future.delayed(const Duration(milliseconds: 100),
+                () => FocusScope.of(context).requestFocus(_buscaFocus));
+      }
+    });
+  }
+
+  void _onFiltroChanged(String value) {
+    setState(() {
+      filtro = value.trim();
+      // Reinicia animação para fade suave
+      _fadeController.reset();
+      _fadeController.forward();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
+    if (loading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final usuariosFiltrados = List.generate(
+      usuariosBox.length,
+          (i) => MapEntry(i, usuariosBox.getAt(i)!),
+    ).where((entry) {
+      return filtro.isEmpty || entry.value.nome.toLowerCase().contains(filtro.toLowerCase());
+    }).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -95,93 +151,173 @@ class _SelecaoState extends State<Selecao> {
           style: TextStyle(fontSize: 16),
         ),
       )
-          : Padding(
-        padding: const EdgeInsets.only(bottom: 80),
-        child: ListView.builder(
-          reverse: true,
-          itemCount: usuariosBox.length,
-          itemBuilder: (context, i) {
-            final u = usuariosBox.getAt(i)!;
-            final estaSelecionado = selecionados.contains(i);
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Card(
-                elevation: estaSelecionado ? 6 : 2,
-                color: AppColors.mel.withOpacity(0.3),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  side: estaSelecionado
-                      ? BorderSide(color: AppColors.terciaria, width: 2)
-                      : BorderSide.none,
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onLongPress: () => setState(() => selecionados.add(i)),
-                  onTap: () async {
-                    if (selecionando) {
-                      setState(() {
-                        if (estaSelecionado) {
-                          selecionados.remove(i);
-                        } else {
-                          selecionados.add(i);
-                        }
-                      });
-                    } else {
-                      await openEncryptedUserBox(u.nome);
-                      if (context.mounted) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => UsuarioPage(userId: u.nome),
-                          ),
-                        );
-                      }
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                    child: Row(
-                      children: [
-                        Icon(Icons.person, color: cs.onPrimary),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Text(
-                            u.nome,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: cs.onPrimary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
+          : Column(
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) =>
+                FadeTransition(opacity: animation, child: child),
+            child: mostrandoBusca
+                ? Padding(
+              key: const ValueKey('buscaCampo'),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: TextField(
+                controller: _buscaCtrl,
+                focusNode: _buscaFocus,
+                onChanged: _onFiltroChanged,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'Buscar perfil...',
+                  hintStyle: const TextStyle(color: Colors.white70),
+                  prefixIcon:
+                  const Icon(Icons.search, color: AppColors.primaria),
+                  suffixIcon: filtro.isNotEmpty
+                      ? IconButton(
+                    icon: const Icon(Icons.close, color: Colors.white70),
+                    onPressed: () {
+                      _buscaCtrl.clear();
+                      _onFiltroChanged('');
+                    },
+                  )
+                      : null,
+                  filled: true,
+                  fillColor: Colors.white10,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-            );
-          },
-        ),
+            )
+                : const SizedBox.shrink(
+              key: ValueKey('empty'),
+            ),
+          ),
+          Expanded(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: ListView.builder(
+                reverse: true,
+                padding: const EdgeInsets.only(bottom: 90),
+                itemCount: usuariosFiltrados.length,
+                itemBuilder: (context, i) {
+                  final idx = usuariosFiltrados[i].key;
+                  final u = usuariosFiltrados[i].value;
+                  final estaSelecionado = selecionados.contains(idx);
+
+                  return Padding(
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    child: Card(
+                      elevation: estaSelecionado ? 6 : 2,
+                      color: AppColors.mel.withOpacity(0.3),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: estaSelecionado
+                            ? BorderSide(color: AppColors.terciaria, width: 2)
+                            : BorderSide.none,
+                      ),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onLongPress: () => setState(() => selecionados.add(idx)),
+                        onTap: () async {
+                          if (selecionando) {
+                            setState(() {
+                              if (estaSelecionado) {
+                                selecionados.remove(idx);
+                              } else {
+                                selecionados.add(idx);
+                              }
+                            });
+                          } else {
+                            await openEncryptedUserBox(u.nome);
+                            if (context.mounted) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => UsuarioPage(userId: u.nome),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 20),
+                          child: Row(
+                            children: [
+                              Icon(Icons.person_rounded, color: cs.onPrimary),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Text(
+                                  u.nome,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                    color: cs.onPrimary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: selecionando
-            ? _confirmarExcluir
-            : () => showAddUserDialog(
-          context: context,
-          usuariosBox: usuariosBox,
-          onUsuarioCriado: () => setState(() {}),
-        ),
-        backgroundColor: selecionando ? AppColors.terciaria : cs.secondary,
-        foregroundColor: cs.onSecondary,
-        icon: Icon(
-          selecionando ? Icons.delete : Icons.add,
-          size: 28,
-        ),
-        label: Text(
-          selecionando ? 'Apagar' : 'Novo perfil',
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 4, right: 4, left: 36),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            FloatingActionButton.extended(
+              heroTag: 'buscar',
+              onPressed: _toggleBusca,
+              icon: Icon(mostrandoBusca ? Icons.close_rounded : Icons.search_rounded),
+              label: Text(
+                mostrandoBusca ? 'Fechar' : 'Buscar',
+                style: const TextStyle(fontSize: 16),
+              ),
+              backgroundColor: mostrandoBusca ? AppColors.terciaria : AppColors.primaria,
+              foregroundColor: AppColors.fundo,
+            ),
+            const SizedBox(width: 12),
+            FloatingActionButton.extended(
+              heroTag: 'principal',
+              onPressed: selecionando
+                  ? _confirmarExcluir
+                  : () => showAddUserDialog(
+                context: context,
+                usuariosBox: usuariosBox,
+                onUsuarioCriado: () => setState(() {}),
+              ),
+              backgroundColor: selecionando ? AppColors.terciaria : cs.secondary,
+              foregroundColor: cs.onSecondary,
+              icon: Icon(selecionando ? Icons.delete_rounded : Icons.add_rounded, size: 28),
+              label: Text(
+                selecionando ? 'Apagar' : 'Novo perfil',
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.fundo),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _buscaCtrl.dispose();
+    _buscaFocus.dispose();
+    _fadeController.dispose();
+    super.dispose();
   }
 }

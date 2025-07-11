@@ -32,7 +32,7 @@ Future<void> showAddOptionDialog({
             ),
             const SizedBox(height: 12),
             ListTile(
-              leading: const Icon(Icons.folder, color: AppColors.pasta),
+              leading: const Icon(Icons.folder_rounded, color: AppColors.pasta),
               title: const Text(
                 'Criar Pasta',
                 style: TextStyle(color: Colors.white),
@@ -40,7 +40,7 @@ Future<void> showAddOptionDialog({
               onTap: () => Navigator.pop(context, 'pasta'),
             ),
             ListTile(
-              leading: const Icon(Icons.vpn_key, color: AppColors.primaria),
+              leading: const Icon(Icons.vpn_key_rounded, color: AppColors.primaria),
               title: const Text(
                 'Criar Senha',
                 style: TextStyle(color: Colors.white),
@@ -52,7 +52,7 @@ Future<void> showAddOptionDialog({
               alignment: Alignment.centerRight,
               child: TextButton.icon(
                 onPressed: () => Navigator.pop(context, null),
-                icon: const Icon(Icons.close, color: AppColors.terciaria),
+                icon: const Icon(Icons.close_rounded, color: AppColors.terciaria),
                 label: const Text(
                   'Cancelar',
                   style: TextStyle(color: AppColors.terciaria),

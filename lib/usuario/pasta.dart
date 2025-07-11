@@ -10,6 +10,7 @@ import '../itens/item.dart';
 import 'novoItemDialog.dart'; // para showAddOptionDialog
 import 'filtro.dart';
 import 'deletarItens.dart';
+import 'editSenha.dart';
 
 class PastaPage extends StatefulWidget {
   final Pasta pasta;
@@ -84,12 +85,12 @@ class _PastaPageState extends State<PastaPage> {
             ? Text('${selecionados.length} selecionado(s)')
             : Text(pasta.nome, style: const TextStyle(fontWeight: FontWeight.bold)),
         leading: selecionando
-            ? IconButton(icon: const Icon(Icons.close), onPressed: _cancelarSelecao)
+            ? IconButton(icon: const Icon(Icons.close_rounded), onPressed: _cancelarSelecao)
             : null,
         actions: [
           if (!selecionando)
             IconButton(
-              icon: Icon(isVisible ? Icons.visibility : Icons.visibility_off),
+              icon: Icon(isVisible ? Icons.visibility_rounded : Icons.visibility_off_rounded),
               tooltip: isVisible ? 'Ocultar senhas' : 'Mostrar senhas',
               onPressed: () => setState(() => isVisible = !isVisible),
             ),
@@ -147,7 +148,7 @@ class _PastaPageState extends State<PastaPage> {
               },
               onTap: selecionando
                   ? () => _toggleSelecionado(item)
-                  : () {
+                  : () async {
                 if (item.tipo == 'pasta') {
                   Navigator.push(
                     context,
@@ -158,6 +159,21 @@ class _PastaPageState extends State<PastaPage> {
                       ),
                     ),
                   );
+                } else if (item.tipo == 'senha') {
+                  await showEditarSenhaDialog(
+                    context: context,
+                    nomeInicial: item.nome,
+                    senhaInicial: item.senha!.senha,
+                    onConfirmar: (novoNome, novaSenha) async {
+                      item.senha!.nome = novoNome;
+                      item.senha!.senha = novaSenha;
+
+                      final usuario = widget.userBox.values.first;
+                      await widget.userBox.putAt(0, usuario);
+
+                      setState(() {});
+                    },
+                  );
                 }
               },
               child: Padding(
@@ -166,7 +182,7 @@ class _PastaPageState extends State<PastaPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(
-                      item.tipo == 'pasta' ? Icons.folder : Icons.vpn_key,
+                      item.tipo == 'pasta' ? Icons.folder_rounded : Icons.vpn_key_rounded,
                       color: item.tipo == 'pasta'
                           ? AppColors.pasta
                           : AppColors.primaria,
@@ -214,7 +230,7 @@ class _PastaPageState extends State<PastaPage> {
                     ),
                     IconButton(
                       icon: Icon(
-                        Icons.star,
+                        Icons.star_rounded,
                         color: item.favorito ? Colors.amber : Colors.grey,
                       ),
                       tooltip: item.favorito ? 'Favorito' : 'Marcar favorito',
@@ -222,7 +238,7 @@ class _PastaPageState extends State<PastaPage> {
                     ),
                     if (item.tipo == 'senha')
                       IconButton(
-                        icon: const Icon(Icons.copy, color: Colors.grey),
+                        icon: const Icon(Icons.copy_rounded, color: Colors.grey),
                         tooltip: 'Copiar senha',
                         onPressed: () {
                           Clipboard.setData(
@@ -289,7 +305,7 @@ class _PastaPageState extends State<PastaPage> {
               foregroundColor: cs.onSecondary,
               tooltip:
               selecionando ? 'Excluir itens selecionados' : 'Adicionar novo item',
-              child: Icon(selecionando ? Icons.delete : Icons.add, size: 32),
+              child: Icon(selecionando ? Icons.delete_rounded : Icons.add_rounded, size: 32),
             ),
           ),
         ],

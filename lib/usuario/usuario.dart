@@ -8,6 +8,7 @@ import '../ed.dart';
 import '../cores.dart';
 
 import '../itens/item.dart';
+import 'editSenha.dart';
 import 'novoItemDialog.dart';
 import 'filtro.dart';
 import 'deletarItens.dart';
@@ -109,12 +110,12 @@ class _UsuarioPageState extends State<UsuarioPage> {
             ? Text('${selecionados.length} selecionado(s)')
             : Text(usuario.nome, style: const TextStyle(fontWeight: FontWeight.bold)),
         leading: selecionando
-            ? IconButton(icon: const Icon(Icons.close), onPressed: _cancelarSelecao)
+            ? IconButton(icon: const Icon(Icons.close_rounded), onPressed: _cancelarSelecao)
             : null,
         actions: [
           if (!selecionando)
             IconButton(
-              icon: Icon(isVisible ? Icons.visibility : Icons.visibility_off),
+              icon: Icon(isVisible ? Icons.visibility_rounded : Icons.visibility_off_rounded),
               tooltip: isVisible ? 'Ocultar senhas' : 'Mostrar senhas',
               onPressed: () => setState(() => isVisible = !isVisible),
             ),
@@ -165,16 +166,27 @@ class _UsuarioPageState extends State<UsuarioPage> {
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
               onLongPress: () => setState(() => selecionados.add(item)),
-              onTap: () {
+              onTap: () async {
                 if (selecionando) {
                   _toggleSelecionado(item);
                 } else if (item.tipo == 'pasta') {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                          PastaPage(pasta: item.pasta!, userBox: userBox),
+                      builder: (_) => PastaPage(pasta: item.pasta!, userBox: userBox),
                     ),
+                  );
+                } else if (item.tipo == 'senha') {
+                  await showEditarSenhaDialog(
+                    context: context,
+                    nomeInicial: item.nome,
+                    senhaInicial: item.senha!.senha,
+                    onConfirmar: (novoNome, novaSenha) async {
+                      item.senha!.nome = novoNome;
+                      item.senha!.senha = novaSenha;
+                      await userBox.putAt(0, usuario); // Salva no Hive
+                      setState(() {}); // Atualiza UI
+                    },
                   );
                 }
               },
@@ -183,7 +195,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
                 child: Row(
                   children: [
                     Icon(
-                      item.tipo == 'pasta' ? Icons.folder : Icons.vpn_key,
+                      item.tipo == 'pasta' ? Icons.folder_rounded : Icons.vpn_key_rounded,
                       color: item.tipo == 'pasta' ? AppColors.pasta : AppColors.primaria,
                     ),
                     const SizedBox(width: 16),
@@ -226,7 +238,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
                     ),
                     IconButton(
                       icon: Icon(
-                        Icons.star,
+                        Icons.star_rounded,
                         color: item.favorito ? Colors.amber : Colors.grey,
                       ),
                       tooltip: item.favorito ? 'Favorito' : 'Marcar favorito',
@@ -234,7 +246,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
                     ),
                     if (item.tipo == 'senha')
                       IconButton(
-                        icon: const Icon(Icons.copy, color: Colors.grey),
+                        icon: const Icon(Icons.copy_rounded, color: Colors.grey),
                         tooltip: 'Copiar senha',
                         onPressed: () =>
                             Clipboard.setData(ClipboardData(text: item.senha!.senha)),
@@ -282,7 +294,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
               selecionando ? AppColors.terciaria : cs.secondary,
               foregroundColor: cs.onSecondary,
               tooltip: selecionando ? 'Excluir itens selecionados' : 'Adicionar novo item',
-              child: Icon(selecionando ? Icons.delete : Icons.add, size: 32),
+              child: Icon(selecionando ? Icons.delete_rounded : Icons.add_rounded, size: 32),
               onPressed: () async {
                 if (selecionando) {
                   await deletarSelecionadosGenerico(

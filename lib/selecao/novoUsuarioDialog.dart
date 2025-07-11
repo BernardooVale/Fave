@@ -23,18 +23,7 @@ Future<void> showAddUserDialog({
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Novo Usuário', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                IconButton(
-                  iconSize: 28,
-                  icon: Icon(Icons.close, color: AppColors.mel),
-                  tooltip: 'Fechar',
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
+            const Text('Novo Usuário', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             TextField(
               controller: controller,
@@ -51,13 +40,13 @@ Future<void> showAddUserDialog({
               children: [
                 IconButton(
                   iconSize: 28,
-                  icon: Icon(Icons.delete, color: cs.tertiary),
+                  icon: Icon(Icons.close_rounded, color: cs.tertiary),
                   tooltip: 'Limpar',
-                  onPressed: () => controller.clear(),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
                 IconButton(
                   iconSize: 28,
-                  icon: Icon(Icons.check, color: cs.secondary),
+                  icon: Icon(Icons.check_rounded, color: cs.secondary),
                   tooltip: 'Confirmar',
                   onPressed: () async {
                     final userName = controller.text.trim();
