@@ -1,3 +1,4 @@
+import 'package:autenticacao/notificacao/notificacao.dart';
 import 'package:autenticacao/usuario/documentoDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -389,17 +390,31 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
                               IconButton(
                                 icon: const Icon(Icons.copy_rounded, color: Colors.grey),
                                 tooltip: 'Copiar senha',
-                                onPressed: () => Clipboard.setData(
-                                  ClipboardData(text: item.senha!.senha),
-                                ),
+                                onPressed: () {
+                                  Clipboard.setData(
+                                    ClipboardData(text: item.senha!.senha),
+                                  );
+                                  mostrarNotificacao(
+                                      context: context,
+                                      mensagem: "Senha copiada",
+                                      background: AppColors.primaria.withOpacity(0.8)
+                                  );
+                                }
                               ),
                             if (item.tipo == 'documento')
                               IconButton(
                                 icon: const Icon(Icons.copy_rounded, color: Colors.grey),
                                 tooltip: 'Copiar número',
-                                onPressed: () => Clipboard.setData(
-                                  ClipboardData(text: item.documento!.numero),
-                                ),
+                                onPressed: () {
+                                  Clipboard.setData(
+                                    ClipboardData(text: item.documento!.numero),
+                                  );
+                                  mostrarNotificacao(
+                                      context: context,
+                                      mensagem: "Documento copiado",
+                                      background: AppColors.doc.withOpacity(0.8)
+                                  );
+                                }
                               ),
                           ],
                         ),

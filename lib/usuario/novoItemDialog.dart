@@ -1,3 +1,4 @@
+import 'package:autenticacao/notificacao/notificacao.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'dart:typed_data';
@@ -263,7 +264,21 @@ Future<void> showCreateFolderSheet({
                 ),
                 onPressed: () async {
                   final nome = nomeController.text.trim();
-                  if (nome.isEmpty) return;
+
+                  if (nome.isEmpty) {
+                    mostrarNotificacao(
+                        context: context,
+                        mensagem: 'Escreva um nome',
+                        background: AppColors.terciaria
+                    );
+                    return;
+                  }
+
+                  mostrarNotificacao(
+                      context: context,
+                      mensagem: "Pasta criada",
+                      background: AppColors.secundaria
+                  );
 
                   await addFolder(
                     userBox: userBox,
@@ -470,7 +485,30 @@ Future<void> showCreatePasswordSheet({
                       onPressed: () async {
                         final nome = nomeController.text.trim();
                         final senha = senhaController.text.trim();
-                        if (nome.isEmpty || senha.isEmpty) return;
+
+                        if (nome.isEmpty) {
+                          mostrarNotificacao(
+                              context: context,
+                              mensagem: 'Escreva um nome',
+                              background: AppColors.terciaria
+                          );
+                          return;
+                        }
+
+                        if (senha.isEmpty) {
+                          mostrarNotificacao(
+                              context: context,
+                              mensagem: 'Escreva uma senha',
+                              background: AppColors.terciaria
+                          );
+                          return;
+                        }
+
+                        mostrarNotificacao(
+                            context: context,
+                            mensagem: "Senha cadastrada",
+                            background: AppColors.secundaria
+                        );
 
                         await addPassword(
                           userBox: userBox,
@@ -807,7 +845,29 @@ Future<void> showCreateDocumentSheet({
                     final numero = numeroController.text.trim();
                     final orgao = orgaoController.text.trim();
 
-                    if (nome.isEmpty || numero.isEmpty) return;
+                    if (nome.isEmpty) {
+                      mostrarNotificacao(
+                          context: context,
+                          mensagem: 'Escreva um nome',
+                          background: AppColors.terciaria
+                      );
+                      return;
+                    }
+
+                    if (numero.isEmpty) {
+                      mostrarNotificacao(
+                          context: context,
+                          mensagem: 'Escreva um numero',
+                          background: AppColors.terciaria
+                      );
+                      return;
+                    }
+
+                    mostrarNotificacao(
+                        context: context,
+                        mensagem: "Documento cadastrado",
+                        background: AppColors.secundaria
+                    );
 
                     // Aqui criptografa todas as fotos antes de salvar:
                     final fotosCriptografadas = <Uint8List>[];

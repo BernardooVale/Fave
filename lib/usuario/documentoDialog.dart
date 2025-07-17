@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../../cores.dart';
 import '../ed.dart';
 import 'fotoCriptografia.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 void mostrarFotoAmpliada(BuildContext context, Uint8List foto) {
   showDialog(
@@ -20,6 +23,8 @@ void mostrarFotoAmpliada(BuildContext context, Uint8List foto) {
                 fit: BoxFit.contain,
               ),
             ),
+
+            // Botão de fechar
             Positioned(
               bottom: 40,
               right: 24,
@@ -34,6 +39,31 @@ void mostrarFotoAmpliada(BuildContext context, Uint8List foto) {
                     icon: const Icon(Icons.close_rounded, color: AppColors.fundo, size: 36),
                     onPressed: () => Navigator.of(context).pop(),
                     tooltip: 'Fechar',
+                  ),
+                ),
+              ),
+            ),
+
+            // Botão de compartilhar
+            Positioned(
+              bottom: 40,
+              left: 24,
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: AppColors.mel,
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.share_rounded, color: AppColors.fundo, size: 32),
+                    onPressed: () async {
+                      final tempDir = await getTemporaryDirectory();
+                      final file = await File('${tempDir.path}/imagem.jpg').create();
+                      await file.writeAsBytes(foto);
+                      await Share.shareXFiles([XFile(file.path)], text: 'Veja este documento!');
+                    },
+                    tooltip: 'Compartilhar',
                   ),
                 ),
               ),

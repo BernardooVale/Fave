@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import '../cores.dart';
 import '../ed.dart';
 import '../itens/item.dart';
+import '../notificacao/notificacao.dart';
 import 'filtroDialog.dart';
 import 'novoItemDialog.dart'; // para showAddOptionDialog
 import 'filtro.dart';
@@ -378,23 +379,33 @@ class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMix
                               ),
                               if (item.tipo == 'senha')
                                 IconButton(
-                                  icon: const Icon(Icons.copy_rounded, color: Colors.grey),
-                                  tooltip: 'Copiar senha',
-                                  onPressed: () {
-                                    Clipboard.setData(
-                                      ClipboardData(text: item.senha!.senha),
-                                    );
-                                  },
+                                    icon: const Icon(Icons.copy_rounded, color: Colors.grey),
+                                    tooltip: 'Copiar senha',
+                                    onPressed: () {
+                                      Clipboard.setData(
+                                        ClipboardData(text: item.senha!.senha),
+                                      );
+                                      mostrarNotificacao(
+                                          context: context,
+                                          mensagem: "Senha copiada",
+                                          background: AppColors.primaria.withOpacity(0.8)
+                                      );
+                                    }
                                 ),
                               if (item.tipo == 'documento')
                                 IconButton(
-                                  icon: const Icon(Icons.copy_rounded, color: Colors.grey),
-                                  tooltip: 'Copiar número do documento',
-                                  onPressed: () {
-                                    Clipboard.setData(
-                                      ClipboardData(text: item.documento!.numero),
-                                    );
-                                  },
+                                    icon: const Icon(Icons.copy_rounded, color: Colors.grey),
+                                    tooltip: 'Copiar número',
+                                    onPressed: () {
+                                      Clipboard.setData(
+                                        ClipboardData(text: item.documento!.numero),
+                                      );
+                                      mostrarNotificacao(
+                                          context: context,
+                                          mensagem: "Documento copiado",
+                                          background: AppColors.doc.withOpacity(0.8)
+                                      );
+                                    }
                                 ),
                             ],
                           ),

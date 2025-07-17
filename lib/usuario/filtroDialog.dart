@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../cores.dart';
+import '../notificacao/notificacao.dart';
 
 class filtroDialog extends StatefulWidget {
   final Set<String> tiposAtuais; // ex: {'pastas', 'senhas', 'documentos'}
@@ -65,7 +66,13 @@ class _filtroDialogState extends State<filtroDialog> {
           ),
         ),
         TextButton(
-          onPressed: selecionados.isEmpty ? null : () => Navigator.of(context).pop(selecionados),
+          onPressed: selecionados.isEmpty
+              ? () => mostrarNotificacao(
+                  context: context,
+                  mensagem: 'Selecione algum item',
+                  background: AppColors.terciaria,
+                )
+              : () => Navigator.of(context).pop(selecionados),
           child: Text(
               'Aplicar',
               style: TextStyle(

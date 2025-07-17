@@ -1,8 +1,9 @@
-import 'package:autenticacao/cores.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import '../cores.dart';
 import '../ed.dart';
 import '../cofre.dart';
+import '../notificacao/notificacao.dart';
 
 Future<void> showAddUserDialog({
   required BuildContext context,
@@ -50,14 +51,30 @@ Future<void> showAddUserDialog({
                   tooltip: 'Confirmar',
                   onPressed: () async {
                     final userName = controller.text.trim();
-                    if (userName.isEmpty) return;
 
-                    if (usuariosBox.containsKey(userName)) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Usuário já existe!')),
+                    if (userName.isEmpty || controller.text.isEmpty) {
+                      mostrarNotificacao(
+                        context: context,
+                        mensagem: 'Digite um nome',
+                        background: AppColors.terciaria,
                       );
                       return;
                     }
+
+                    if (usuariosBox.containsKey(userName)) {
+                      mostrarNotificacao(
+                        context: context,
+                        mensagem: 'Perfil já existe',
+                        background: AppColors.terciaria,
+                      );
+                      return;
+                    }
+
+                    mostrarNotificacao(
+                        context: context,
+                        mensagem: "Perfil cadastrado",
+                        background: AppColors.secundaria
+                    );
 
                     await openEncryptedUserBox(userName);
                     await usuariosBox.put(userName, Usuario(nome: userName));
