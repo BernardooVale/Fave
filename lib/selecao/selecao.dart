@@ -49,6 +49,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
     Hive.registerAdapter(UsuarioAdapter());
     Hive.registerAdapter(PastaAdapter());
     Hive.registerAdapter(SenhaAdapter());
+    Hive.registerAdapter(DocumentoAdapter());
 
     usuariosBox = await Hive.openBox<Usuario>('usuarios');
     setState(() => loading = false);
@@ -58,9 +59,9 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Excluir usuário(s)'),
+        title: const Text('Excluir perfil(s)'),
         content: Text(
-          'Deseja realmente excluir ${selecionados.length} usuário(s)? '
+          'Deseja realmente excluir ${selecionados.length} perfil(s)? '
               'Esta ação não pode ser desfeita.',
         ),
         actions: [
@@ -137,7 +138,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
             : const Text('Perfis', style: TextStyle(fontWeight: FontWeight.bold)),
         leading: selecionando
             ? IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(Icons.close_rounded),
           onPressed: () => setState(() => selecionados.clear()),
         )
             : null,
@@ -147,7 +148,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
           : usuariosBox.isEmpty
           ? const Center(
         child: Text(
-          'Nenhum usuário criado.',
+          'Nenhum perfil criado.',
           style: TextStyle(fontSize: 16),
         ),
       )
@@ -170,10 +171,10 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
                   hintText: 'Buscar perfil...',
                   hintStyle: const TextStyle(color: Colors.white70),
                   prefixIcon:
-                  const Icon(Icons.search, color: AppColors.primaria),
+                  const Icon(Icons.search_rounded, color: AppColors.primaria),
                   suffixIcon: filtro.isNotEmpty
                       ? IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white70),
+                    icon: const Icon(Icons.close_rounded, color: Colors.white70),
                     onPressed: () {
                       _buscaCtrl.clear();
                       _onFiltroChanged('');

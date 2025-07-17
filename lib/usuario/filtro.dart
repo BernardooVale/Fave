@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../cores.dart';
 
 class FilterButton extends StatelessWidget {
   final String label;
@@ -20,15 +21,23 @@ class FilterButton extends StatelessWidget {
       width: 100,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: active ? cs.primary : Colors.grey,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          backgroundColor: active ? AppColors.mel : Colors.grey,
+          foregroundColor: AppColors.fundo,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           padding: EdgeInsets.zero,
         ),
         onPressed: onPressed,
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 16),
+        child: Row(
+          mainAxisAlignment: active ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center,
+          children: [
+            active
+                ? Icon(Icons.filter_list_rounded, size: 20)  // Altere o ícone conforme necessário
+                : SizedBox(),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
         ),
       ),
     );

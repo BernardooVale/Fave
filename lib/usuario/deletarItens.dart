@@ -38,12 +38,18 @@ Future<void> deletarSelecionadosGenerico({
     target.senhas = target.senhas
         ?.where((s) => !selecionados.contains(Item.senha(s)))
         .toList();
+    target.documentos = target.documentos
+        ?.where((s) => !selecionados.contains(Item.documento(s)))
+        .toList();
   } else if (target is Pasta) {
     target.subpastas = target.subpastas
         ?.where((p) => !selecionados.contains(Item.pasta(p)))
         .toList();
     target.senhas = target.senhas
         ?.where((s) => !selecionados.contains(Item.senha(s)))
+        .toList();
+    target.documentos = target.documentos
+        ?.where((s) => !selecionados.contains(Item.documento(s)))
         .toList();
   } else {
     throw Exception('Tipo de target não suportado: ${target.runtimeType}');

@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import '../cores.dart';
 import '../ed.dart';
 import '../itens/item.dart';
+import 'filtroDialog.dart';
 import 'novoItemDialog.dart'; // para showAddOptionDialog
 import 'filtro.dart';
 import 'deletarItens.dart';
@@ -15,24 +16,56 @@ import 'editSenha.dart';
 class PastaPage extends StatefulWidget {
   final Pasta pasta;
   final Box<Usuario> userBox;
+  final bool isVisibleIni;
 
   const PastaPage({
     Key? key,
     required this.pasta,
     required this.userBox,
+    this.isVisibleIni = false,
   }) : super(key: key);
 
   @override
   State<PastaPage> createState() => _PastaPageState();
 }
 
-class _PastaPageState extends State<PastaPage> {
-  bool isVisible = false;
+class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMixin {
+  late bool isVisible;
   bool selecionando = false;
   Set<Item> selecionados = {};
   final ScrollController _scrollController = ScrollController();
 
   String filtro = 'todos';
+  bool mostrandoBusca = false;
+  String termoPesquisa = '';
+
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocus = FocusNode();
+
+  late final AnimationController _fadeController;
+  late final Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    isVisible = widget.isVisibleIni;
+
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _fadeAnimation = CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut);
+    _fadeController.forward();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocus.dispose();
+    _scrollController.dispose();
+    _fadeController.dispose();
+    super.dispose();
+  }
 
   void _toggleSelecionado(Item item) {
     setState(() {
@@ -54,6 +87,29 @@ class _PastaPageState extends State<PastaPage> {
     });
   }
 
+  void _toggleBusca() {
+    setState(() {
+      mostrandoBusca = !mostrandoBusca;
+      if (!mostrandoBusca) {
+        termoPesquisa = '';
+        _searchController.clear();
+        _searchFocus.unfocus();
+        _fadeController.forward();
+      } else {
+        Future.delayed(const Duration(milliseconds: 100),
+                () => FocusScope.of(context).requestFocus(_searchFocus));
+      }
+    });
+  }
+
+  void _onFiltroChanged(String value) {
+    setState(() {
+      termoPesquisa = value.trim();
+      _fadeController.reset();
+      _fadeController.forward();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final pasta = widget.pasta;
@@ -62,16 +118,29 @@ class _PastaPageState extends State<PastaPage> {
     final List<Item> todosItens = [
       if (pasta.subpastas != null) ...pasta.subpastas!.map((p) => Item.pasta(p)),
       if (pasta.senhas != null) ...pasta.senhas!.map((s) => Item.senha(s)),
+      if (pasta.documentos != null) ...pasta.documentos!.map((s) => Item.documento(s))
     ];
 
-    List<Item> itensFiltrados;
-    if (filtro == 'pastas') {
-      itensFiltrados = todosItens.where((i) => i.tipo == 'pasta').toList();
-    } else if (filtro == 'senhas') {
-      itensFiltrados = todosItens.where((i) => i.tipo == 'senha').toList();
-    } else {
-      itensFiltrados = todosItens;
-    }
+    final Map<String, String> pluralToSingular = {
+      'pastas': 'pasta',
+      'senhas': 'senha',
+      'documentos': 'documento',
+    };
+
+    final Set<String> tiposSelecionados = filtro == 'todos'
+        ? {'pasta', 'senha', 'documento'}
+        : filtro
+        .split(',')
+        .map((t) => pluralToSingular[t.trim()] ?? t)
+        .toSet();
+
+    final List<Item> itensFiltrados = todosItens
+        .where((i) =>
+    tiposSelecionados.contains(i.tipo) &&
+        (termoPesquisa.isEmpty ||
+            i.nome.toLowerCase().contains(termoPesquisa.toLowerCase())))
+        .toList();
+
 
     itensFiltrados.sort((a, b) {
       if (a.favorito && !b.favorito) return -1;
@@ -97,161 +166,246 @@ class _PastaPageState extends State<PastaPage> {
         ],
         backgroundColor: AppColors.mel.withOpacity(0.7),
         elevation: 2,
+        bottom: null,
       ),
 
-      body: itensFiltrados.isEmpty
-          ? Center(
-        child: Text(
-          'Nenhum item para mostrar.',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-      )
-          : ListView.builder(
-        physics: BouncingScrollPhysics(),
-        controller: _scrollController,
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-        reverse: true,
-        itemCount: itensFiltrados.length,
-        itemBuilder: (context, index) {
-          final item = itensFiltrados[index];
-          final selecionado = selecionados.contains(item);
-
-          Future<void> toggleFavorito() async {
-            if (item.tipo == 'pasta') {
-              item.pasta!.favorito = !item.pasta!.favorito;
-            } else {
-              item.senha!.favorito = !item.senha!.favorito;
-            }
-            await widget.userBox.putAt(0, widget.userBox.values.first);
-            setState(() {});
-          }
-
-          return Card(
-            elevation: selecionado ? 6 : 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-              side: selecionado
-                  ? BorderSide(color: AppColors.terciaria, width: 2)
-                  : BorderSide.none,
-            ),
-            margin: const EdgeInsets.symmetric(vertical: 6),
-            color: item.tipo == 'pasta'
-                ? AppColors.pasta.withOpacity(0.2)
-                : AppColors.primaria.withOpacity(0.2),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(16),
-              onLongPress: () {
-                setState(() {
-                  selecionando = true;
-                  selecionados.add(item);
-                });
-              },
-              onTap: selecionando
-                  ? () => _toggleSelecionado(item)
-                  : () async {
-                if (item.tipo == 'pasta') {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => PastaPage(
-                        pasta: item.pasta!,
-                        userBox: widget.userBox,
-                      ),
-                    ),
-                  );
-                } else if (item.tipo == 'senha') {
-                  await showEditarSenhaDialog(
-                    context: context,
-                    nomeInicial: item.nome,
-                    senhaInicial: item.senha!.senha,
-                    onConfirmar: (novoNome, novaSenha) async {
-                      item.senha!.nome = novoNome;
-                      item.senha!.senha = novaSenha;
-
-                      final usuario = widget.userBox.values.first;
-                      await widget.userBox.putAt(0, usuario);
-
-                      setState(() {});
+      body: Column(
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) =>
+                FadeTransition(opacity: animation, child: child),
+            child: mostrandoBusca
+                ? Padding(
+              key: const ValueKey('buscaCampo'),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: TextField(
+                controller: _searchController,
+                focusNode: _searchFocus,
+                autofocus: true,
+                onChanged: _onFiltroChanged,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'Pesquisar...',
+                  hintStyle: const TextStyle(color: Colors.white70),
+                  prefixIcon: const Icon(Icons.search_rounded, color: AppColors.primaria),
+                  suffixIcon: termoPesquisa.isNotEmpty
+                      ? IconButton(
+                    icon: const Icon(Icons.close_rounded, color: Colors.white70),
+                    onPressed: () {
+                      _searchController.clear();
+                      _onFiltroChanged('');
                     },
-                  );
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      item.tipo == 'pasta' ? Icons.folder_rounded : Icons.vpn_key_rounded,
-                      color: item.tipo == 'pasta'
-                          ? AppColors.pasta
-                          : AppColors.primaria,
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.nome,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: cs.onPrimary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (item.tipo == 'senha') ...[
-                            const SizedBox(height: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: isVisible
-                                    ? Colors.grey.withOpacity(0.15)
-                                    : Colors.grey.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                isVisible ? item.senha!.senha : '••••••••',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                  color: cs.onPrimary?.withOpacity(0.85),
-                                  letterSpacing: 2,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.star_rounded,
-                        color: item.favorito ? Colors.amber : Colors.grey,
-                      ),
-                      tooltip: item.favorito ? 'Favorito' : 'Marcar favorito',
-                      onPressed: toggleFavorito,
-                    ),
-                    if (item.tipo == 'senha')
-                      IconButton(
-                        icon: const Icon(Icons.copy_rounded, color: Colors.grey),
-                        tooltip: 'Copiar senha',
-                        onPressed: () {
-                          Clipboard.setData(
-                            ClipboardData(text: item.senha!.senha),
-                          );
-                        },
-                      ),
-                  ],
+                  )
+                      : null,
+                  filled: true,
+                  fillColor: Colors.white10,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
+            )
+                : const SizedBox.shrink(key: ValueKey('empty')),
+          ),
+          Expanded(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: itensFiltrados.isEmpty
+                  ? Center(
+                child: Text(
+                  'Nenhum item para mostrar.',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              )
+                  : ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  controller: _scrollController,
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                  reverse: true,
+                  itemCount: itensFiltrados.length,
+                  itemBuilder: (context, index) {
+                    final item = itensFiltrados[index];
+                    final selecionado = selecionados.contains(item);
+
+                    Future<void> toggleFavorito() async {
+                      if (item.tipo == 'pasta') {
+                        item.pasta!.favorito = !item.pasta!.favorito;
+                      } else if (item.tipo == 'senha') {
+                        item.senha!.favorito = !item.senha!.favorito;
+                      } else if (item.tipo == 'documento') {
+                        item.documento!.favorito = !item.documento!.favorito;
+                      }
+                      await widget.userBox.putAt(0, widget.userBox.values.first);
+                      setState(() {});
+                    }
+
+                    return Card(
+                      elevation: selecionado ? 6 : 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: selecionado
+                            ? BorderSide(color: AppColors.terciaria, width: 2)
+                            : BorderSide.none,
+                      ),
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      color: item.tipo == 'pasta'
+                          ? AppColors.pasta.withOpacity(0.2)
+                          : item.tipo == 'documento'
+                          ? AppColors.doc.withOpacity(0.2)
+                          : AppColors.primaria.withOpacity(0.2),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onLongPress: () {
+                          setState(() {
+                            selecionando = true;
+                            selecionados.add(item);
+                          });
+                        },
+                        onTap: selecionando
+                            ? () => _toggleSelecionado(item)
+                            : () async {
+                          if (item.tipo == 'pasta') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => PastaPage(
+                                  pasta: item.pasta!,
+                                  userBox: widget.userBox,
+                                  isVisibleIni: isVisible,
+                                ),
+                              ),
+                            );
+                          } else if (item.tipo == 'senha') {
+                            await showEditarSenhaDialog(
+                              context: context,
+                              nomeInicial: item.nome,
+                              senhaInicial: item.senha!.senha,
+                              onConfirmar: (novoNome, novaSenha) async {
+                                item.senha!.nome = novoNome;
+                                item.senha!.senha = novaSenha;
+
+                                final usuario = widget.userBox.values.first;
+                                await widget.userBox.putAt(0, usuario);
+                                setState(() {});
+                              },
+                            );
+                          } else if (item.tipo == 'documento') {
+                            // Dialog a ser construido
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                item.tipo == 'pasta'
+                                    ? Icons.folder_rounded
+                                    : item.tipo == 'documento'
+                                    ? Icons.description_rounded
+                                    : Icons.vpn_key_rounded,
+                                color: item.tipo == 'pasta'
+                                    ? AppColors.pasta
+                                    : item.tipo == 'documento'
+                                    ? AppColors.doc
+                                    : AppColors.primaria,
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.nome,
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                        color: cs.onPrimary,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    if (item.tipo == 'senha') ...[
+                                      const SizedBox(height: 6),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.15),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          isVisible ? item.senha!.senha : '••••••••',
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                            color: cs.onPrimary?.withOpacity(0.85),
+                                            letterSpacing: 2,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                    if (item.tipo == 'documento') ...[
+                                      const SizedBox(height: 6),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.15),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          isVisible ? item.documento!.numero : '••••••••',
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                            color: cs.onPrimary?.withOpacity(0.85),
+                                            letterSpacing: 2,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.star_rounded,
+                                  color: item.favorito ? Colors.amber : Colors.grey,
+                                ),
+                                tooltip: item.favorito ? 'Favorito' : 'Marcar favorito',
+                                onPressed: toggleFavorito,
+                              ),
+                              if (item.tipo == 'senha')
+                                IconButton(
+                                  icon: const Icon(Icons.copy_rounded, color: Colors.grey),
+                                  tooltip: 'Copiar senha',
+                                  onPressed: () {
+                                    Clipboard.setData(
+                                      ClipboardData(text: item.senha!.senha),
+                                    );
+                                  },
+                                ),
+                              if (item.tipo == 'documento')
+                                IconButton(
+                                  icon: const Icon(Icons.copy_rounded, color: Colors.grey),
+                                  tooltip: 'Copiar número do documento',
+                                  onPressed: () {
+                                    Clipboard.setData(
+                                      ClipboardData(text: item.documento!.numero),
+                                    );
+                                  },
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+              ),
             ),
-          );
-        },
+          ),
+        ]
       ),
       floatingActionButton: Stack(
         alignment: Alignment.bottomLeft,
@@ -259,24 +413,43 @@ class _PastaPageState extends State<PastaPage> {
           Positioned(
             bottom: 16,
             left: 30,
-            child: Row(
-              children: [
-                FilterButton(
-                  label: 'Pastas',
-                  active: filtro == 'pastas',
-                  onPressed: () {
-                    setState(() => filtro = filtro == 'pastas' ? 'todos' : 'pastas');
-                  },
-                ),
-                const SizedBox(width: 10),
-                FilterButton(
-                  label: 'Senhas',
-                  active: filtro == 'senhas',
-                  onPressed: () {
-                    setState(() => filtro = filtro == 'senhas' ? 'todos' : 'senhas');
-                  },
-                ),
-              ],
+            child: FilterButton(
+              label: 'Filtros',
+              active: filtro != 'todos',
+              onPressed: () async {
+                final tiposSelecionados = await showDialog<Set<String>>(
+                  context: context,
+                  builder: (context) => filtroDialog(
+                    tiposAtuais: filtro == 'todos'
+                        ? {'pastas', 'senhas', 'documentos'}
+                        : filtro.split(',').toSet(),
+                  ),
+                );
+
+                if (tiposSelecionados != null) {
+                  setState(() {
+                    filtro = tiposSelecionados.length == 3
+                        ? 'todos'
+                        : tiposSelecionados.join(',');
+                  });
+                }
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 16,
+            left: 140,
+            child: FloatingActionButton.extended(
+              heroTag: 'search',
+              tooltip: mostrandoBusca ? 'Fechar' : 'Pesquisar',
+              onPressed: _toggleBusca,
+              icon: Icon(mostrandoBusca ? Icons.close_rounded : Icons.search_rounded),
+              label: Text(
+                mostrandoBusca ? 'Fechar' : 'Buscar',
+                style: const TextStyle(fontSize: 16),
+              ),
+              backgroundColor: mostrandoBusca ? AppColors.terciaria : AppColors.primaria,
+              foregroundColor: AppColors.fundo,
             ),
           ),
           Positioned(

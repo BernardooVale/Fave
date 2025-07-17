@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:hive/hive.dart';
 
 part 'ed.g.dart';
@@ -13,7 +14,10 @@ class Usuario extends HiveObject {
   @HiveField(2)
   List<Senha>? senhas;
 
-  Usuario({required this.nome, this.pastas, this.senhas});
+  @HiveField(3)
+  List<Documento>? documentos;
+
+  Usuario({required this.nome, this.pastas, this.senhas, this.documentos});
 }
 
 @HiveType(typeId: 1)
@@ -28,15 +32,19 @@ class Pasta extends HiveObject {
   List<Senha>? senhas;
 
   @HiveField(3)
-  DateTime ultimaModificacao;
+  List<Documento>? documentos;
 
   @HiveField(4)
+  DateTime ultimaModificacao;
+
+  @HiveField(5)
   bool favorito;
 
   Pasta({
     required this.nome,
     this.subpastas,
     this.senhas,
+    this.documentos,
     DateTime? ultimaModificacao,
     this.favorito = false,
   }) : ultimaModificacao = ultimaModificacao ?? DateTime.now();
@@ -50,7 +58,6 @@ class Senha extends HiveObject {
   @HiveField(1)
   String senha;
 
-  // NOVOS CAMPOS
   @HiveField(2)
   DateTime ultimaModificacao;
 
@@ -63,4 +70,43 @@ class Senha extends HiveObject {
     DateTime? ultimaModificacao,
     this.favorito = false,
   }) : ultimaModificacao = ultimaModificacao ?? DateTime.now();
+}
+
+@HiveType(typeId: 3)
+class Documento extends HiveObject {
+  @HiveField(0)
+  String nome;
+
+  @HiveField(1)
+  String numero;
+
+  @HiveField(2)
+  DateTime? dataEmissao;          // opcional
+
+  @HiveField(3)
+  DateTime? dataVencimento;       // opcional
+
+  @HiveField(4)
+  String? orgaoExpedidor;         // opcional
+
+  @HiveField(5)
+  DateTime ultimaModificacao;
+
+  @HiveField(6)
+  bool favorito;
+
+  @HiveField(7)
+  List<Uint8List> fotosCriptografadas; // imagens do documento já criptografadas
+
+  Documento({
+    required this.nome,
+    required this.numero,
+    this.dataEmissao,
+    this.dataVencimento,
+    this.orgaoExpedidor,
+    DateTime? ultimaModificacao,
+    this.favorito = false,
+    List<Uint8List>? fotosCriptografadas,
+  })  : ultimaModificacao = ultimaModificacao ?? DateTime.now(),
+        fotosCriptografadas = fotosCriptografadas ?? [];
 }

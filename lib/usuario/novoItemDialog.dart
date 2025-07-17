@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
 
 import '../usuario/usuario.dart';
 import '../ed.dart'; // Pasta e Senha
 import '../cores.dart';
 import 'senhaAleatoria.dart';
+import 'fotoCriptografia.dart';
 
 Future<void> showAddOptionDialog({
   required BuildContext context,
@@ -47,6 +50,14 @@ Future<void> showAddOptionDialog({
               ),
               onTap: () => Navigator.pop(context, 'senha'),
             ),
+            ListTile(
+              leading: const Icon(Icons.description_rounded, color: AppColors.secundaria),
+              title: const Text(
+                'Criar Documento',
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () => Navigator.pop(context, 'documento'),
+            ),
             const Divider(color: Colors.white24),
             Align(
               alignment: Alignment.centerRight,
@@ -74,6 +85,13 @@ Future<void> showAddOptionDialog({
     );
   } else if (option == 'senha') {
     await showCreatePasswordSheet(
+      context: context,
+      userBox: userBox,
+      target: target,
+      onUpdate: onUpdate,
+    );
+  } else if (option == 'documento') {
+    await showCreateDocumentSheet(
       context: context,
       userBox: userBox,
       target: target,
@@ -134,6 +152,39 @@ Future<void> addPassword({
   }
 
   // Atualiza no Hive
+  await userBox.putAt(0, userBox.values.first);
+  onUpdate();
+}
+
+Future<void> addDocument({
+  required Box<Usuario> userBox,
+  required dynamic target,
+  required String nome,
+  required String numero,
+  required DateTime? dataEmissao,
+  required DateTime? dataVencimento,
+  required String? orgaoExpedidor,
+  required List<Uint8List> fotosCriptografadas,
+  required VoidCallback onUpdate,
+}) async {
+  final novoDocumento = Documento(
+    nome: nome,
+    numero: numero,
+    dataEmissao: dataEmissao,
+    dataVencimento: dataVencimento,
+    orgaoExpedidor: orgaoExpedidor,
+    ultimaModificacao: DateTime.now(),
+    fotosCriptografadas: fotosCriptografadas,
+  );
+
+  if (target is Usuario) {
+    target.documentos ??= [];
+    target.documentos!.add(novoDocumento);
+  } else if (target is Pasta) {
+    target.documentos ??= [];
+    target.documentos!.add(novoDocumento);
+  }
+
   await userBox.putAt(0, userBox.values.first);
   onUpdate();
 }
@@ -441,5 +492,351 @@ Future<void> showCreatePasswordSheet({
         ),
       );
     },
+  );
+}
+
+void mostrarFotoAmpliada(
+    BuildContext context,
+    Uint8List foto,
+    int fotoIndex,
+    ValueNotifier<List<Uint8List>> fotosNotifier,
+    VoidCallback atualizaUI,
+    ) {
+  showDialog(
+    context: context,
+    builder: (context) => Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.all(16),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Image.memory(
+              foto,
+              fit: BoxFit.contain,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+
+          // Botão Fechar - canto inferior direito
+          Positioned(
+            bottom: 40,
+            right: 24,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.mel,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.close_rounded, color: AppColors.fundo, size: 36),
+                  onPressed: () => Navigator.of(context).pop(),
+                  tooltip: 'Fechar',
+                ),
+              ),
+            ),
+          ),
+
+          // Botão Remover - canto inferior esquerdo
+          Positioned(
+            bottom: 40,
+            left: 24,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.terciaria,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.delete_rounded, color: Colors.white, size: 36),
+                  onPressed: () {
+                    // Remove a foto da lista
+                    final novaLista = List<Uint8List>.from(fotosNotifier.value);
+                    if (fotoIndex >= 0 && fotoIndex < novaLista.length) {
+                      novaLista.removeAt(fotoIndex);
+                      fotosNotifier.value = novaLista;
+                      atualizaUI(); // Atualiza a UI do bottom sheet
+                    }
+                    Navigator.of(context).pop();
+                  },
+                  tooltip: 'Remover foto',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Future<void> showCreateDocumentSheet({
+  required BuildContext context,
+  required Box<Usuario> userBox,
+  required dynamic target,
+  required VoidCallback onUpdate,
+}) async {
+  final nomeController = TextEditingController();
+  final numeroController = TextEditingController();
+  final orgaoController = TextEditingController();
+
+  DateTime? dataEmissao;
+  DateTime? dataVencimento;
+
+  final fotosNotifier = ValueNotifier<List<Uint8List>>([]); // imagens sem criptografia
+  final selectedIndices = ValueNotifier<Set<int>>({});
+  final picker = ImagePicker();
+
+  Future<void> adicionarFotos() async {
+    final List<XFile>? imagens = await picker.pickMultiImage(imageQuality: 80);
+    if (imagens == null || imagens.isEmpty) return;
+
+    final novasFotos = <Uint8List>[];
+    for (final img in imagens) {
+      final bytes = await img.readAsBytes();
+      novasFotos.add(bytes);
+    }
+    fotosNotifier.value = [...fotosNotifier.value, ...novasFotos];
+  }
+
+  await showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: AppColors.fundo,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (context) => StatefulBuilder(
+      builder: (context, setState) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+            left: 24,
+            right: 24,
+            top: 24,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Novo Documento', style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Colors.white, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              TextField(
+                controller: nomeController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Nome do documento *',
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  filled: true,
+                  fillColor: AppColors.secundaria.withOpacity(0.1),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: numeroController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Número*',
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  filled: true,
+                  fillColor: AppColors.secundaria.withOpacity(0.1),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: orgaoController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Órgão expedidor',
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  filled: true,
+                  fillColor: AppColors.secundaria.withOpacity(0.1),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () async {
+                      FocusScope.of(context).unfocus(); // desfoca o campo ativo
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null) setState(() => dataEmissao = picked);
+                    },
+                    child: Text(
+                      dataEmissao != null
+                          ? 'Emissão: ${dataEmissao!.day}/${dataEmissao!.month}/${dataEmissao!.year}'
+                          : 'Data emissão',
+                      style: TextStyle(color: dataEmissao != null ? Colors.white : AppColors.primaria),
+                    ),
+                  ),
+                  Expanded(child: SizedBox()),
+                  TextButton(
+                    onPressed: () async {
+                      FocusScope.of(context).unfocus();
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null) setState(() => dataVencimento = picked);
+                    },
+                    child: Text(
+                      dataVencimento != null
+                          ? 'Vencimento: ${dataVencimento!.day}/${dataVencimento!.month}/${dataVencimento!.year}'
+                          : 'Data vencimento',
+                      style: TextStyle(color: dataVencimento != null ? Colors.white : AppColors.primaria),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 100,
+                child: ValueListenableBuilder<List<Uint8List>>(
+                  valueListenable: fotosNotifier,
+                  builder: (context, fotos, _) {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 100,
+                          child: ValueListenableBuilder<Set<int>>(
+                            valueListenable: selectedIndices,
+                            builder: (context, selected, _) {
+                              return ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: fotos.length + 1,
+                                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                                itemBuilder: (context, index) {
+                                  if (index == 0) {
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        await adicionarFotos();
+                                        setState(() {}); // Atualiza UI
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: 80,
+                                            height: 80,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(12),
+                                              color: Colors.white10,
+                                            ),
+                                            child: const Icon(Icons.camera_alt_rounded, color: Colors.white54),
+                                          ),
+                                          const Text('Adicionar fotos', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    final foto = fotos[index - 1];
+                                    final isSelected = selected.contains(index - 1);
+                                    return GestureDetector(
+                                      onTap: () {
+                                        if (selected.isNotEmpty) {
+                                          selectedIndices.value = Set.of(selected)..remove(index - 1);
+                                        } else {
+                                          mostrarFotoAmpliada(context, foto, index - 1, fotosNotifier, () => setState(() {}));
+                                        }
+                                      },
+                                      onLongPress: () {
+                                        selectedIndices.value = Set.of(selected)..add(index - 1);
+                                      },
+                                      child: Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(12),
+                                            child: Image.memory(
+                                              foto,
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.cover,
+                                              color: isSelected ? Colors.black.withOpacity(0.4) : null,
+                                              colorBlendMode: isSelected ? BlendMode.darken : null,
+                                            ),
+                                          ),
+                                          if (isSelected)
+                                            Positioned(
+                                              top: 4,
+                                              right: 4,
+                                              child: Icon(Icons.check_circle_rounded, color: AppColors.primaria, size: 20),
+                                            ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.secundaria,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                  ),
+                  child: const Text(
+                    'Salvar',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () async {
+                    final nome = nomeController.text.trim();
+                    final numero = numeroController.text.trim();
+                    final orgao = orgaoController.text.trim();
+
+                    if (nome.isEmpty || numero.isEmpty) return;
+
+                    // Aqui criptografa todas as fotos antes de salvar:
+                    final fotosCriptografadas = <Uint8List>[];
+                    for (var foto in fotosNotifier.value) {
+                      final criptografada = await criptografar(foto);
+                      fotosCriptografadas.add(criptografada);
+                    }
+
+                    await addDocument(
+                      userBox: userBox,
+                      target: target,
+                      nome: nome,
+                      numero: numero,
+                      dataEmissao: dataEmissao,
+                      dataVencimento: dataVencimento,
+                      orgaoExpedidor: orgao.isNotEmpty ? orgao : null,
+                      onUpdate: onUpdate,
+                      fotosCriptografadas: fotosCriptografadas
+                    );
+
+                    await userBox.putAt(0, userBox.values.first);
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
   );
 }
