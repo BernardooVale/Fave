@@ -1,13 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'generated/l10n.dart';
 import 'cores.dart';
 import 'selecao/selecao.dart';
+import 'selecaoLingua.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final localeCode = prefs.getString('locale') ?? '';
+  runApp(MyApp(initialLocaleCode: localeCode));
+}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  final String initialLocaleCode;
+  const MyApp({super.key, required this.initialLocaleCode});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+
+  static void setLocale(BuildContext context, Locale newLocale) {
+    final state = context.findAncestorStateOfType<_MyAppState>();
+    state?.changeLocale(newLocale);
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale? _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialLocaleCode.isNotEmpty) {
+      _locale = _parseLocale(widget.initialLocaleCode);
+    }
+  }
+
+  Locale _parseLocale(String localeCode) {
+    final parts = localeCode.split('_');
+    if (parts.length == 2) {
+      return Locale(parts[0], parts[1]);
+    } else {
+      return Locale(parts[0]);
+    }
+  }
+
+  Future<void> changeLocale(Locale newLocale) async {
+    final prefs = await SharedPreferences.getInstance();
+    final localeString = newLocale.countryCode != null && newLocale.countryCode!.isNotEmpty
+        ? '${newLocale.languageCode}_${newLocale.countryCode}'
+        : newLocale.languageCode;
+    await prefs.setString('locale', localeString);
+    setState(() {
+      _locale = newLocale;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = ColorScheme(
@@ -23,15 +74,25 @@ class MyApp extends StatelessWidget {
       error: Colors.red,
       onError: Colors.white,
     );
+
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true, colorScheme: cs, scaffoldBackgroundColor: AppColors.fundo),
-      home: const AuthGate(),
+      theme: ThemeData(useMaterial3: true, colorScheme: cs),
+      locale: _locale,
+      supportedLocales: S.delegate.supportedLocales,
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      home: widget.initialLocaleCode.isEmpty ? const SelecaoLingua() : const AuthGate(),
     );
   }
 }
 
 class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
+
   @override
   State<AuthGate> createState() => _AuthGateState();
 }
@@ -52,7 +113,7 @@ class _AuthGateState extends State<AuthGate> {
     bool ok = false;
     try {
       ok = await auth.authenticate(
-        localizedReason: 'Para acessar o app, autentique-se',
+        localizedReason: S.of(context).writeAPasswordNotification,
         options: const AuthenticationOptions(useErrorDialogs: true, stickyAuth: true),
       );
     } catch (e) {
@@ -67,7 +128,6 @@ class _AuthGateState extends State<AuthGate> {
         MaterialPageRoute(builder: (_) => const Selecao()),
       );
     }
-    // Se falhar, permanece na tela com botão ativo novamente
   }
 
   @override
@@ -78,6 +138,8 @@ class _AuthGateState extends State<AuthGate> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
@@ -87,10 +149,10 @@ class _AuthGateState extends State<AuthGate> {
             Expanded(
               child: Center(
                 child: Text(
-                  'Autenticador',
+                  'Fave',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    fontSize: 40,
-                    color: Theme.of(context).colorScheme.onSurface,
+                    fontSize: 65,
+                    color: AppColors.mel,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -126,7 +188,7 @@ class _AuthGateState extends State<AuthGate> {
                     ),
                     const SizedBox(width: 24),
                     Text(
-                      _authenticating ? 'Autenticando...' : 'Autenticar',
+                      _authenticating ? s.loadingData : s.confirmButtonText,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

@@ -1,0 +1,312 @@
+{
+    "@@locale": "en",
+    "config": "Configurations",
+    "lingua": "Language",
+    "excluirPerfil": "Delete profile(s)",
+    "deleteProfilesConfirm": "Are you sure you want to delete {quantidade} profile(s)? This action cannot be undone.",
+    "@deleteProfilesConfirm": {
+      "description": "Confirmation message for deleting profiles",
+      "placeholders": {
+        "quantidade": {
+          "type": "int",
+          "example": "3"
+        }
+      }
+    },
+    "deleteItemsConfirm": "Are you sure you want to delete {quantidade} items(s)? This action cannot be undone.",
+    "@deleteItemsConfirm": {
+      "description": "Mensagem de confirmação de exclusão de itens",
+      "placeholders": {
+        "quantidade": {
+          "type": "int",
+          "example": "3"
+        }
+      }
+    },
+    "perfis": "Profiles",
+    "excluir": "Delete",
+    "semPerfis": "No profile created",
+    "buscarPerfil": "Search profile...",
+    "apagar": "Delete",
+    "novoPerfil": "New profile",
+    "digiteNomePerfil": "Write the profile name",
+    "limpar": "Clear",
+    "perfilExiste": "Profile already exists",
+    "perfilCadastrado": "Registered profile",
+    "digiteumNome": "Write a name",
+    "confirmarExclusaoItems": "Confirm removal",
+    "compartilhar": "Share",
+    "numero": "Number",
+    "orgao": "Institution",
+    "dataEmissao": "Issue date",
+    "dataVencimento": "Expiration date",
+    "dateDisplay": "{data}",
+    "@dateDisplay": {
+        "description": "Formato de exibição da data.",
+        "placeholders": {
+            "data": {
+                "type": "DateTime",
+                "format": "yMd"
+            }
+        }
+    },
+    "editPasswordTitle": "Edit Password",
+    "passwordNameLabel": "Password Name",
+    "passwordLabel": "Password",
+    "randomPasswordText": "Random password",
+    "cancelButtonText": "Cancel",
+    "confirmButtonText": "Confirm",
+    "perfilNaoEncontrado": "Profile not found",
+    "filterByTypesTitle": "Filter by types",
+    "foldersFilterLabel": "Folders",
+    "passwordsFilterLabel": "Passwords",
+    "documentsFilterLabel": "Documents",
+    "applyButtonText": "Apply",
+    "selectAnItemNotification": "Select an item",
+    "whatDoYouWantToCreateTitle": "What do you want to create?",
+    "createFolderOption": "Create Folder",
+    "createPasswordOption": "Create Password",
+    "createDocumentOption": "Create Document",
+    "targetMustBeUserOrFolderException": "Target must be User or Folder",
+    "newFolderTitle": "New Folder",
+    "folderNameLabel": "Folder name",
+    "writeANameNotification": "Write a name",
+    "escrevaNumeroNotificacao": "Write a number",
+    "documentoCadastrado": "Document created",
+    "folderCreatedNotification": "Folder created",
+    "newPasswordTitle": "New Password",
+    "writeAPasswordNotification": "Write a password",
+    "passwordRegisteredNotification": "Password registered",
+    "closeButtonTooltip": "Close",
+    "removePhotoButtonTooltip": "Remove photo",
+    "newDocumentTitle": "New Document",
+    "documentNameLabel": "Document name*",
+    "documentNumberLabel": "Number*",
+    "issuingBodyLabel": "Issuing body",
+    "issueDateLabel": "Issue date",
+    "issueDateDisplay": "Issue: {month}/{day}/{year}",
+    "expirationDateLabel": "Expiration date",
+    "expirationDateDisplay": "Expires: {month}/{day}/{year}",
+    "addPhotosText": "Add photos",
+    "saveButtonText": "Save",
+    "sizeLabel": "Size",
+    "lowercaseLettersLabel": "Lowercase letters",
+    "uppercaseLettersLabel": "Uppercase letters",
+    "numbersLabel": "Numbers",
+    "specialCharactersLabel": "Special characters (!@#$%)",
+    "loadingData": "Loading...",
+    "userNotFound": "User not found",
+    "selectedItemsCount": "{count,plural,one{{count} selected}other{{count} selected}}",
+    "@selectedItemsCount": {
+      "description": "Quantidade de itens selecionados",
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
+    "hidePasswordsTooltip": "Hide passwords",
+    "showPasswordsTooltip": "Show passwords",
+    "searchHintText": "Search...",
+    "searchButtonText": "Search",
+    "noItemsToShow": "No items to show.",
+    "favoriteTooltip": "Favorite",
+    "markFavoriteTooltip": "Mark favorite",
+    "copyPasswordTooltip": "Copy password",
+    "passwordCopiedNotification": "Password copied",
+    "copyDocumentNumberTooltip": "Copy number",
+    "documentNumberCopiedNotification": "Document copied",
+    "filtersButtonLabel": "Filters",
+    "deleteSelectedItemsTooltip": "Delete selected items",
+    "addNewItemTooltip": "Add new item",
+    "@editPasswordTitle": {
+        "description": "Title of the dialog to edit a password."
+    },
+    "@passwordNameLabel": {
+        "description": "Label for the password name input field."
+    },
+    "@passwordLabel": {
+        "description": "Label for the password input field."
+    },
+    "@randomPasswordText": {
+        "description": "Text for the link or button to generate a random password."
+    },
+    "@cancelButtonText": {
+        "description": "Text for the 'Cancel' button in edit/confirmation dialogs."
+    },
+    "@confirmButtonText": {
+        "description": "Text for the 'Confirm' button in edit/confirmation dialogs."
+    },
+    "@filterByTypesTitle": {
+        "description": "Title of the filter by item types dialog."
+    },
+    "@foldersFilterLabel": {
+        "description": "Label for the Folders filter option."
+    },
+    "@passwordsFilterLabel": {
+        "description": "Label for the Passwords filter option."
+    },
+    "@documentsFilterLabel": {
+        "description": "Label for the Documents filter option."
+    },
+    "@applyButtonText": {
+        "description": "Text for the 'Apply' button in the filter dialog."
+    },
+    "@selectAnItemNotification": {
+        "description": "Notification message displayed when the user tries to apply the filter without selecting any item."
+    },
+    "@whatDoYouWantToCreateTitle": {
+        "description": "Title of the item creation type selection dialog."
+    },
+    "@createFolderOption": {
+        "description": "Option to create a new folder."
+    },
+    "@createPasswordOption": {
+        "description": "Option to create a new password."
+    },
+    "@createDocumentOption": {
+        "description": "Option to create a new document."
+    },
+    "@targetMustBeUserOrFolderException": {
+        "description": "Exception message when the target type is invalid."
+    },
+    "@newFolderTitle": {
+        "description": "Title of the bottom sheet for creating a new folder."
+    },
+    "@folderNameLabel": {
+        "description": "Label for the folder name input field."
+    },
+    "@writeANameNotification": {
+        "description": "Notification message when a name is required and empty."
+    },
+    "@folderCreatedNotification": {
+        "description": "Success notification message when creating a folder."
+    },
+    "@newPasswordTitle": {
+        "description": "Title of the bottom sheet for creating a new password."
+    },
+    "@writeAPasswordNotification": {
+        "description": "Notification message when a password is required and empty."
+    },
+    "@passwordRegisteredNotification": {
+        "description": "Success notification message when registering a password."
+    },
+    "@closeButtonTooltip": {
+        "description": "Tooltip for the close button (in photo view)."
+    },
+    "@removePhotoButtonTooltip": {
+        "description": "Tooltip for the remove photo button (in photo view)."
+    },
+    "@newDocumentTitle": {
+        "description": "Title of the bottom sheet for creating a new document."
+    },
+    "@documentNameLabel": {
+        "description": "Label for the document name input field."
+    },
+    "@documentNumberLabel": {
+        "description": "Label for the document number input field."
+    },
+    "@issuingBodyLabel": {
+        "description": "Label for the document's issuing body input field."
+    },
+    "@issueDateLabel": {
+        "description": "Text for the issue date selection button."
+    },
+    "@issueDateDisplay": {
+        "description": "Display format for the issue date.",
+        "placeholders": {
+            "day": { "type": "int" },
+            "month": { "type": "int" },
+            "year": { "type": "int" }
+        }
+    },
+    "@expirationDateLabel": {
+        "description": "Text for the expiration date selection button."
+    },
+    "@expirationDateDisplay": {
+        "description": "Display format for the expiration date.",
+        "placeholders": {
+            "day": { "type": "int" },
+            "month": { "type": "int" },
+            "year": { "type": "int" }
+        }
+    },
+    "@addPhotosText": {
+        "description": "Text for the button/indicator to add photos."
+    },
+    "@saveButtonText": {
+        "description": "Text for the 'Save' button."
+    },
+    "@sizeLabel": {
+        "description": "Label for the password size configuration."
+    },
+    "@lowercaseLettersLabel": {
+        "description": "Label for the option to include lowercase letters in the password."
+    },
+    "@uppercaseLettersLabel": {
+        "description": "Label for the option to include uppercase letters in the password."
+    },
+    "@numbersLabel": {
+        "description": "Label for the option to include numbers in the password."
+    },
+    "@specialCharactersLabel": {
+        "description": "Label for the option to include special characters in the password."
+    },
+    "@loadingData": {
+        "description": "Text displayed while user data is being loaded."
+    },
+    "@userNotFound": {
+        "description": "Message displayed if the user is not found."
+    },
+    "@selectedItemsCount": {
+        "description": "App Bar title showing how many items are selected.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "@hidePasswordsTooltip": {
+        "description": "Tooltip for the hide passwords button."
+    },
+    "@showPasswordsTooltip": {
+        "description": "Tooltip for the show passwords button."
+    },
+    "@searchHintText": {
+        "description": "Hint text in the search field."
+    },
+    "@searchButtonText": {
+        "description": "Text for the search button."
+    },
+    "@noItemsToShow": {
+        "description": "Message displayed when there are no items to show in the filtered list."
+    },
+    "@favoriteTooltip": {
+        "description": "Tooltip for an item marked as favorite."
+    },
+    "@markFavoriteTooltip": {
+        "description": "Tooltip to mark an item as favorite."
+    },
+    "@copyPasswordTooltip": {
+        "description": "Tooltip for the copy password button."
+    },
+    "@passwordCopiedNotification": {
+        "description": "Notification message when a password is copied to the clipboard."
+    },
+    "@copyDocumentNumberTooltip": {
+        "description": "Tooltip for the copy document number button."
+    },
+    "@documentNumberCopiedNotification": {
+        "description": "Notification message when a document number is copied to the clipboard."
+    },
+    "@filtersButtonLabel": {
+        "description": "Label for the button to open the filters dialog."
+    },
+    "@deleteSelectedItemsTooltip": {
+        "description": "Tooltip for the delete selected items button."
+    },
+    "@addNewItemTooltip": {
+        "description": "Tooltip for the add new item button."
+    }
+}

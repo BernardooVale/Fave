@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../ed.dart';
 import '../itens/item.dart';
+import '../generated/l10n.dart';
 
 Future<void> deletarSelecionadosGenerico({
   required BuildContext context,
@@ -11,22 +12,24 @@ Future<void> deletarSelecionadosGenerico({
 }) async {
   final confirm = await showDialog<bool>(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Confirmar exclusão'),
-      content: Text(
-        'Deseja realmente excluir ${selecionados.length} item(ns) selecionado(s)? Essa ação não pode ser desfeita.',
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: const Text('Cancelar'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, true),
-          child: const Text('Excluir', style: TextStyle(color: Colors.red)),
-        ),
-      ],
-    ),
+    builder: (context) {
+      final s = S.of(context);
+
+      return AlertDialog(
+        title: Text(s.confirmarExclusaoItems),
+        content: Text(s.deleteItemsConfirm(selecionados.length)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(s.cancelButtonText),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(s.excluir, style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      );
+    }
   );
 
   if (confirm != true) return; // Usuário cancelou

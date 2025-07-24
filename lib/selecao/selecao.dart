@@ -6,6 +6,8 @@ import '../cofre.dart';
 import '../usuario/usuario.dart';
 import 'novoUsuarioDialog.dart';
 import '../cores.dart';
+import '../config.dart';
+import '../generated/l10n.dart';
 
 class Selecao extends StatefulWidget {
   const Selecao({super.key});
@@ -56,22 +58,22 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _confirmarExcluir() async {
+    final s = S.of(context);
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Excluir perfil(s)'),
+        title: Text(s.excluirPerfil),
         content: Text(
-          'Deseja realmente excluir ${selecionados.length} perfil(s)? '
-              'Esta ação não pode ser desfeita.',
+          s.deleteProfilesConfirm(selecionados.length)
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
+            child: Text(s.cancelButtonText),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Excluir', style: TextStyle(color: AppColors.terciaria)),
+            child: Text(s.excluir, style: TextStyle(color: AppColors.terciaria)),
           ),
         ],
       ),
@@ -111,8 +113,16 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
     });
   }
 
+  Future<void> _abrirConfiguracoes() async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => const ConfigPage(), // ✅ NOVO PUSH PARA CONFIG
+    ));
+    setState(() {}); // Refrescar a tela se necessário
+  }
+
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final cs = Theme.of(context).colorScheme;
 
     if (loading) {
@@ -134,22 +144,29 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
         elevation: 2,
         centerTitle: true,
         title: selecionando
-            ? Text('${selecionados.length} selecionado(s)')
-            : const Text('Perfis', style: TextStyle(fontWeight: FontWeight.bold)),
+            ? Text(s.selectedItemsCount(selecionados.length))
+            : Text(s.perfis, style: TextStyle(fontWeight: FontWeight.bold)),
         leading: selecionando
             ? IconButton(
           icon: const Icon(Icons.close_rounded),
           onPressed: () => setState(() => selecionados.clear()),
         )
             : null,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_rounded), // ⚙️
+            tooltip: s.config,
+            onPressed: _abrirConfiguracoes,
+          ),
+        ],
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : usuariosBox.isEmpty
-          ? const Center(
+          ? Center(
         child: Text(
-          'Nenhum perfil criado.',
-          style: TextStyle(fontSize: 16),
+          s.semPerfis,
+          style: const TextStyle(fontSize: 16),
         ),
       )
           : Column(
@@ -168,7 +185,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
                 onChanged: _onFiltroChanged,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: 'Buscar perfil...',
+                  hintText: s.buscarPerfil,
                   hintStyle: const TextStyle(color: Colors.white70),
                   prefixIcon:
                   const Icon(Icons.search_rounded, color: AppColors.primaria),
@@ -283,7 +300,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
               onPressed: _toggleBusca,
               icon: Icon(mostrandoBusca ? Icons.close_rounded : Icons.search_rounded),
               label: Text(
-                mostrandoBusca ? 'Fechar' : 'Buscar',
+                mostrandoBusca ? s.closeButtonTooltip : s.searchButtonText,
                 style: const TextStyle(fontSize: 16),
               ),
               backgroundColor: mostrandoBusca ? AppColors.terciaria : AppColors.primaria,
@@ -303,7 +320,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
               foregroundColor: cs.onSecondary,
               icon: Icon(selecionando ? Icons.delete_rounded : Icons.add_rounded, size: 28),
               label: Text(
-                selecionando ? 'Apagar' : 'Novo perfil',
+                selecionando ? s.apagar : s.novoPerfil,
                 style: const TextStyle(
                     fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.fundo),
               ),

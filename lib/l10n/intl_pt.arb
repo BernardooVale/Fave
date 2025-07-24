@@ -1,0 +1,312 @@
+{
+    "@@locale": "pt",
+    "config": "Configurações",
+    "lingua": "Idioma",
+    "excluirPerfil": "Excluir perfil(s)",
+    "deleteProfilesConfirm": "Deseja realmente excluir {quantidade} perfil(s)? Esta ação não pode ser desfeita.",
+    "@deleteProfilesConfirm": {
+      "description": "Mensagem de confirmação de exclusão de perfis",
+      "placeholders": {
+        "quantidade": {
+          "type": "int",
+          "example": "3"
+        }
+      }
+    },
+    "deleteItemsConfirm": "Deseja realmente excluir {quantidade} items(s)? Esta ação não pode ser desfeita.",
+    "@deleteItemsConfirm": {
+      "description": "Mensagem de confirmação de exclusão de itens",
+      "placeholders": {
+        "quantidade": {
+          "type": "int",
+          "example": "3"
+        }
+      }
+    },
+    "perfis": "Perfis",
+    "excluir": "Excluir",
+    "semPerfis": "Nenhum perfil criado",
+    "buscarPerfil": "Buscar perfil...",
+    "apagar": "Apagar",
+    "novoPerfil": "Novo perfil",
+    "limpar": "Limpar",
+    "digiteNomePerfil": "Digite o nome do perfil",
+    "digiteumNome": "Digite um nome",
+    "perfilExiste": "Perfil já existe",
+    "perfilCadastrado": "Perfil cadastrado",
+    "confirmarExclusaoItems": "Confirmar exclusão",
+    "compartilhar": "Compartilhar",
+    "numero": "Numero",
+    "orgao": "Órgão",
+    "dataEmissao": "Data de emissão",
+    "dataVencimento": "Data de vencimento",
+    "dateDisplay": "{data}",
+    "@dateDisplay": {
+        "description": "Formato de exibição da data.",
+        "placeholders": {
+            "data": {
+                "type": "DateTime",
+                "format": "yMd"
+            }
+        }
+    },
+    "editPasswordTitle": "Editar Senha",
+    "passwordNameLabel": "Nome da Senha",
+    "passwordLabel": "Senha",
+    "randomPasswordText": "Senha aleatória",
+    "cancelButtonText": "Cancelar",
+    "confirmButtonText": "Confirmar",
+    "perfilNaoEncontrado": "Perfil não encontrado",
+    "filterByTypesTitle": "Filtrar por tipos",
+    "foldersFilterLabel": "Pastas",
+    "passwordsFilterLabel": "Senhas",
+    "documentsFilterLabel": "Documentos",
+    "applyButtonText": "Aplicar",
+    "selectAnItemNotification": "Selecione algum item",
+    "whatDoYouWantToCreateTitle": "O que deseja criar?",
+    "createFolderOption": "Criar Pasta",
+    "createPasswordOption": "Criar Senha",
+    "createDocumentOption": "Criar Documento",
+    "targetMustBeUserOrFolderException": "target deve ser Usuario ou Pasta",
+    "newFolderTitle": "Nova Pasta",
+    "folderNameLabel": "Nome da pasta",
+    "writeANameNotification": "Escreva um nome",
+    "escrevaNumeroNotificacao": "Escreva um número",
+    "documentoCadastrado": "Documento cadastrado",
+    "folderCreatedNotification": "Pasta criada",
+    "newPasswordTitle": "Nova Senha",
+    "writeAPasswordNotification": "Escreva uma senha",
+    "passwordRegisteredNotification": "Senha cadastrada",
+    "closeButtonTooltip": "Fechar",
+    "removePhotoButtonTooltip": "Remover foto",
+    "newDocumentTitle": "Novo Documento",
+    "documentNameLabel": "Nome do documento*",
+    "documentNumberLabel": "Número*",
+    "issuingBodyLabel": "Órgão expedidor",
+    "issueDateLabel": "Data emissão",
+    "issueDateDisplay": "Emissão: {day}/{month}/{year}",
+    "expirationDateLabel": "Data vencimento",
+    "expirationDateDisplay": "Vencimento: {day}/{month}/{year}",
+    "addPhotosText": "Adicionar fotos",
+    "saveButtonText": "Salvar",
+    "sizeLabel": "Tamanho",
+    "lowercaseLettersLabel": "Letras minúsculas",
+    "uppercaseLettersLabel": "Letras maiúsculas",
+    "numbersLabel": "Números",
+    "specialCharactersLabel": "Caracteres especiais (!@#$%)",
+    "loadingData": "Carregando...",
+    "userNotFound": "Usuário não encontrado",
+    "selectedItemsCount": "{count,plural,one{{count} selecionado}other{{count} selecionados}}",
+    "@selectedItemsCount": {
+      "description": "Quantidade de itens selecionados",
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
+    "hidePasswordsTooltip": "Ocultar senhas",
+    "showPasswordsTooltip": "Mostrar senhas",
+    "searchHintText": "Pesquisar...",
+    "searchButtonText": "Buscar",
+    "noItemsToShow": "Nenhum item para mostrar.",
+    "favoriteTooltip": "Favorito",
+    "markFavoriteTooltip": "Marcar favorito",
+    "copyPasswordTooltip": "Copiar senha",
+    "passwordCopiedNotification": "Senha copiada",
+    "copyDocumentNumberTooltip": "Copiar número",
+    "documentNumberCopiedNotification": "Documento copiado",
+    "filtersButtonLabel": "Filtros",
+    "deleteSelectedItemsTooltip": "Excluir itens selecionados",
+    "addNewItemTooltip": "Adicionar novo item",
+    "@editPasswordTitle": {
+        "description": "Título do diálogo para editar uma senha."
+    },
+    "@passwordNameLabel": {
+        "description": "Rótulo para o campo de entrada do nome da senha."
+    },
+    "@passwordLabel": {
+        "description": "Rótulo para o campo de entrada da senha."
+    },
+    "@randomPasswordText": {
+        "description": "Texto do link ou botão para gerar uma senha aleatória."
+    },
+    "@cancelButtonText": {
+        "description": "Texto do botão 'Cancelar' em diálogos de edição/confirmação."
+    },
+    "@confirmButtonText": {
+        "description": "Texto do botão 'Confirmar' em diálogos de edição/confirmação."
+    },
+    "@filterByTypesTitle": {
+        "description": "Título do diálogo de filtro por tipos de itens."
+    },
+    "@foldersFilterLabel": {
+        "description": "Rótulo para a opção de filtro de Pastas."
+    },
+    "@passwordsFilterLabel": {
+        "description": "Rótulo para a opção de filtro de Senhas."
+    },
+    "@documentsFilterLabel": {
+        "description": "Rótulo para a opção de filtro de Documentos."
+    },
+    "@applyButtonText": {
+        "description": "Texto do botão 'Aplicar' no diálogo de filtro."
+    },
+    "@selectAnItemNotification": {
+        "description": "Mensagem de notificação exibida quando o usuário tenta aplicar o filtro sem selecionar nenhum item."
+    },
+    "@whatDoYouWantToCreateTitle": {
+        "description": "Título do diálogo de seleção de tipo de item a ser criado."
+    },
+    "@createFolderOption": {
+        "description": "Opção para criar uma nova pasta."
+    },
+    "@createPasswordOption": {
+        "description": "Opção para criar uma nova senha."
+    },
+    "@createDocumentOption": {
+        "description": "Opção para criar um novo documento."
+    },
+    "@targetMustBeUserOrFolderException": {
+        "description": "Mensagem de exceção quando o tipo de target é inválido."
+    },
+    "@newFolderTitle": {
+        "description": "Título do bottom sheet para criar nova pasta."
+    },
+    "@folderNameLabel": {
+        "description": "Rótulo do campo para o nome da pasta."
+    },
+    "@writeANameNotification": {
+        "description": "Mensagem de notificação quando um nome é obrigatório e está vazio."
+    },
+    "@folderCreatedNotification": {
+        "description": "Mensagem de notificação de sucesso ao criar uma pasta."
+    },
+    "@newPasswordTitle": {
+        "description": "Título do bottom sheet para criar nova senha."
+    },
+    "@writeAPasswordNotification": {
+        "description": "Mensagem de notificação quando uma senha é obrigatória e está vazia."
+    },
+    "@passwordRegisteredNotification": {
+        "description": "Mensagem de notificação de sucesso ao cadastrar uma senha."
+    },
+    "@closeButtonTooltip": {
+        "description": "Dica de ferramenta para o botão de fechar (em visualização de foto)."
+    },
+    "@removePhotoButtonTooltip": {
+        "description": "Dica de ferramenta para o botão de remover foto (em visualização de foto)."
+    },
+    "@newDocumentTitle": {
+        "description": "Título do bottom sheet para criar novo documento."
+    },
+    "@documentNameLabel": {
+        "description": "Rótulo do campo para o nome do documento."
+    },
+    "@documentNumberLabel": {
+        "description": "Rótulo do campo para o número do documento."
+    },
+    "@issuingBodyLabel": {
+        "description": "Rótulo do campo para o órgão expedidor do documento."
+    },
+    "@issueDateLabel": {
+        "description": "Texto para o botão de seleção de data de emissão."
+    },
+    "@issueDateDisplay": {
+        "description": "Formato de exibição da data de emissão.",
+        "placeholders": {
+            "day": { "type": "int" },
+            "month": { "type": "int" },
+            "year": { "type": "int" }
+        }
+    },
+    "@expirationDateLabel": {
+        "description": "Texto para o botão de seleção de data de vencimento."
+    },
+    "@expirationDateDisplay": {
+        "description": "Formato de exibição da data de vencimento.",
+        "placeholders": {
+            "day": { "type": "int" },
+            "month": { "type": "int" },
+            "year": { "type": "int" }
+        }
+    },
+    "@addPhotosText": {
+        "description": "Texto para o botão/indicador de adicionar fotos."
+    },
+    "@saveButtonText": {
+        "description": "Texto do botão 'Salvar'."
+    },
+    "@sizeLabel": {
+        "description": "Rótulo para a configuração de tamanho da senha."
+    },
+    "@lowercaseLettersLabel": {
+        "description": "Rótulo para a opção de incluir letras minúsculas na senha."
+    },
+    "@uppercaseLettersLabel": {
+        "description": "Rótulo para a opção de incluir letras maiúsculas na senha."
+    },
+    "@numbersLabel": {
+        "description": "Rótulo para a opção de incluir números na senha."
+    },
+    "@specialCharactersLabel": {
+        "description": "Rótulo para a opção de incluir caracteres especiais na senha."
+    },
+    "@loadingData": {
+        "description": "Texto exibido enquanto os dados do usuário estão sendo carregados."
+    },
+    "@userNotFound": {
+        "description": "Mensagem exibida se o usuário não for encontrado."
+    },
+    "@selectedItemsCount": {
+        "description": "Título da AppBar mostrando quantos itens estão selecionados.",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "format": "compact"
+            }
+        }
+    },
+    "@hidePasswordsTooltip": {
+        "description": "Dica de ferramenta para o botão de ocultar senhas."
+    },
+    "@showPasswordsTooltip": {
+        "description": "Dica de ferramenta para o botão de mostrar senhas."
+    },
+    "@searchHintText": {
+        "description": "Texto de dica no campo de pesquisa."
+    },
+    "@searchButtonText": {
+        "description": "Texto do botão para abrir a barra de pesquisa."
+    },
+    "@noItemsToShow": {
+        "description": "Mensagem exibida quando não há itens para mostrar na lista filtrada."
+    },
+    "@favoriteTooltip": {
+        "description": "Dica de ferramenta para um item marcado como favorito."
+    },
+    "@markFavoriteTooltip": {
+        "description": "Dica de ferramenta para marcar um item como favorito."
+    },
+    "@copyPasswordTooltip": {
+        "description": "Dica de ferramenta para o botão de copiar senha."
+    },
+    "@passwordCopiedNotification": {
+        "description": "Mensagem de notificação quando uma senha é copiada para a área de transferência."
+    },
+    "@copyDocumentNumberTooltip": {
+        "description": "Dica de ferramenta para o botão de copiar o número do documento."
+    },
+    "@documentNumberCopiedNotification": {
+        "description": "Mensagem de notificação quando o número de um documento é copiado para a área de transferência."
+    },
+    "@filtersButtonLabel": {
+        "description": "Rótulo do botão para abrir o diálogo de filtros."
+    },
+    "@deleteSelectedItemsTooltip": {
+        "description": "Dica de ferramenta para o botão de exclusão de itens selecionados."
+    },
+    "@addNewItemTooltip": {
+        "description": "Dica de ferramenta para o botão de adicionar um novo item."
+    }
+}

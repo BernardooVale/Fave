@@ -14,10 +14,12 @@ import 'novoItemDialog.dart';
 import 'filtro.dart';
 import 'deletarItens.dart';
 import 'pasta.dart';
+import '../generated/l10n.dart';
 
 class UsuarioPage extends StatefulWidget {
   final String userId;
   const UsuarioPage({Key? key, required this.userId}) : super(key: key);
+
 
   @override
   State<UsuarioPage> createState() => _UsuarioPageState();
@@ -122,6 +124,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final cs = Theme.of(context).colorScheme;
 
     if (loading) {
@@ -132,7 +135,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
 
     final usuario = userBox.values.isNotEmpty ? userBox.values.first : null;
     if (usuario == null) {
-      return const Scaffold(body: Center(child: Text('Usuário não encontrado')));
+      return Scaffold(body: Center(child: Text(s.perfilNaoEncontrado)));
     }
 
     final List<Item> todosItens = [
@@ -168,7 +171,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
     return Scaffold(
       appBar: AppBar(
         title: selecionando
-            ? Text('${selecionados.length} selecionado(s)')
+            ? Text(s.selectedItemsCount(selecionados.length))
             : Text(usuario.nome, style: const TextStyle(fontWeight: FontWeight.bold)),
         leading: selecionando
             ? IconButton(icon: const Icon(Icons.close_rounded), onPressed: _cancelarSelecao)
@@ -177,7 +180,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
           if (!selecionando) ...[
             IconButton(
               icon: Icon(isVisible ? Icons.visibility_rounded : Icons.visibility_off_rounded),
-              tooltip: isVisible ? 'Ocultar senhas' : 'Mostrar senhas',
+              tooltip: isVisible ? s.hidePasswordsTooltip: s.showPasswordsTooltip,
               onPressed: () => setState(() => isVisible = !isVisible),
             ),
           ],
@@ -204,7 +207,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
                 onChanged: _onFiltroChanged,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: 'Pesquisar...',
+                  hintText: s.searchHintText,
                   hintStyle: const TextStyle(color: Colors.white70),
                   prefixIcon: const Icon(Icons.search_rounded, color: AppColors.primaria),
                   suffixIcon: termoPesquisa.isNotEmpty
@@ -235,7 +238,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
               child: itensFiltrados.isEmpty
                   ? Center(
                 child: Text(
-                  'Nenhum item para mostrar.',
+                  s.noItemsToShow,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               )
@@ -383,20 +386,20 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
                                 Icons.star_rounded,
                                 color: item.favorito ? Colors.amber : Colors.grey,
                               ),
-                              tooltip: item.favorito ? 'Favorito' : 'Marcar favorito',
+                              tooltip: item.favorito ? s.favoriteTooltip : s.markFavoriteTooltip,
                               onPressed: toggleFavorito,
                             ),
                             if (item.tipo == 'senha')
                               IconButton(
                                 icon: const Icon(Icons.copy_rounded, color: Colors.grey),
-                                tooltip: 'Copiar senha',
+                                tooltip: s.copyPasswordTooltip,
                                 onPressed: () {
                                   Clipboard.setData(
                                     ClipboardData(text: item.senha!.senha),
                                   );
                                   mostrarNotificacao(
                                       context: context,
-                                      mensagem: "Senha copiada",
+                                      mensagem: s.passwordCopiedNotification,
                                       background: AppColors.primaria.withOpacity(0.8)
                                   );
                                 }
@@ -404,14 +407,14 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
                             if (item.tipo == 'documento')
                               IconButton(
                                 icon: const Icon(Icons.copy_rounded, color: Colors.grey),
-                                tooltip: 'Copiar número',
+                                tooltip: s.copyDocumentNumberTooltip,
                                 onPressed: () {
                                   Clipboard.setData(
                                     ClipboardData(text: item.documento!.numero),
                                   );
                                   mostrarNotificacao(
                                       context: context,
-                                      mensagem: "Documento copiado",
+                                      mensagem: s.documentNumberCopiedNotification,
                                       background: AppColors.doc.withOpacity(0.8)
                                   );
                                 }
@@ -435,7 +438,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
             bottom: 16,
             left: 30,
             child: FilterButton(
-              label: 'Filtros',
+              label: s.filtersButtonLabel,
               active: filtro != 'todos',
               onPressed: () async {
                 final tiposSelecionados = await showDialog<Set<String>>(
@@ -462,11 +465,11 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
             left: 140,
             child: FloatingActionButton.extended(
               heroTag: 'search',
-              tooltip: mostrandoBusca ? 'Fechar' : 'Pesquisar',
+              tooltip: mostrandoBusca ? s.closeButtonTooltip : s.searchHintText,
               onPressed: _toggleBusca,
               icon: Icon(mostrandoBusca ? Icons.close_rounded : Icons.search_rounded),
               label: Text(
-                mostrandoBusca ? 'Fechar' : 'Buscar',
+                mostrandoBusca ? s.closeButtonTooltip : s.searchButtonText,
                 style: const TextStyle(fontSize: 16),
               ),
               backgroundColor: mostrandoBusca ? AppColors.terciaria : AppColors.primaria,
@@ -479,7 +482,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
             child: FloatingActionButton(
               backgroundColor: selecionando ? AppColors.terciaria : cs.secondary,
               foregroundColor: cs.onSecondary,
-              tooltip: selecionando ? 'Excluir itens selecionados' : 'Adicionar novo item',
+              tooltip: selecionando ? s.deleteSelectedItemsTooltip : s.addNewItemTooltip,
               child: Icon(selecionando ? Icons.delete_rounded : Icons.add_rounded, size: 32),
               onPressed: () async {
                 if (selecionando) {

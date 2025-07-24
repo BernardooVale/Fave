@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../cores.dart';
 import 'dart:math';
 
+import '../generated/l10n.dart';
+
 class SenhaAleatoriaPopup extends StatefulWidget {
   final void Function(String senha) onSenhaGerada;
 
@@ -82,6 +84,7 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
   Widget build(BuildContext context) {
     final forca = calcularForcaSenha(senha);
     final corBarra = corForcaSenha(forca);
+    final s = S.of(context);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -96,7 +99,7 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Senha Aleatória',
+              s.randomPasswordText,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -142,7 +145,7 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Tamanho',
+                  s.sizeLabel,
                   style: TextStyle(
                     color: Colors.white70,
                     fontWeight: FontWeight.w600,
@@ -200,7 +203,7 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
 
             // Checkboxes
             CheckboxListTile(
-              title: const Text('Letras minúsculas', style: TextStyle(color: Colors.white)),
+              title: Text(s.lowercaseLettersLabel, style: const TextStyle(color: Colors.white)),
               value: usarMinusculas,
               activeColor: AppColors.secundaria,
               onChanged: (v) {
@@ -211,7 +214,7 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
               },
             ),
             CheckboxListTile(
-              title: const Text('Letras maiúsculas', style: TextStyle(color: Colors.white)),
+              title: Text(s.uppercaseLettersLabel, style: TextStyle(color: Colors.white)),
               value: usarMaiusculas,
               activeColor: AppColors.secundaria,
               onChanged: (v) {
@@ -222,7 +225,7 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
               },
             ),
             CheckboxListTile(
-              title: const Text('Números', style: TextStyle(color: Colors.white)),
+              title: Text(s.numbersLabel, style: TextStyle(color: Colors.white)),
               value: usarNumeros,
               activeColor: AppColors.secundaria,
               onChanged: (v) {
@@ -233,7 +236,7 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
               },
             ),
             CheckboxListTile(
-              title: const Text('Caracteres especiais (!@#\$%)', style: TextStyle(color: Colors.white)),
+              title: Text(s.specialCharactersLabel, style: TextStyle(color: Colors.white)),
               value: usarEspeciais,
               activeColor: AppColors.secundaria,
               onChanged: (v) {
@@ -260,8 +263,8 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
                       ),
                     ),
                     onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      'Cancelar',
+                    child: Text(
+                      s.cancelButtonText,
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -284,8 +287,8 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
                       }
                       Navigator.pop(context);
                     },
-                    child: const Text(
-                      'Confirmar',
+                    child: Text(
+                      s.confirmButtonText,
                       style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                     ),
                   ),
