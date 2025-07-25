@@ -84,6 +84,7 @@ No entanto, é **terminantemente proibido**:
 ## ✍️ Autor
 
 **BernardooVale**
+📬 [bernardoovale@ufmg.br](mailto:bernardoovale@ufmg.br)
 
 ---
 
@@ -173,4 +174,5 @@ However, it is **strictly forbidden** to:
 ## ✍️ Author
 
 **BernardooVale**
+📬 [bernardoovale@ufmg.br](mailto:bernardoovale@ufmg.br)
 
