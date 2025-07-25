@@ -9,19 +9,22 @@ final _secureStorage = FlutterSecureStorage(); // Instância para acesso ao arma
 /// Obtém a chave AES salva de forma segura, ou cria uma nova caso não exista.
 /// A chave tem 32 bytes (256 bits), ideal para AES-256.
 Future<Uint8List> _obterOuCriarChave() async {
-  String? chaveBase64 = await _secureStorage.read(key: _chaveSeguraKey);
+  const androidOptions = AndroidOptions(encryptedSharedPreferences: true);
+  String? chaveBase64 = await _secureStorage.read(
+    key: _chaveSeguraKey,
+    aOptions: androidOptions,
+  );
 
   if (chaveBase64 == null) {
-    // Chave não existe, cria nova chave aleatória e salva em base64
     final novaChave = Key.fromSecureRandom(32);
     await _secureStorage.write(
       key: _chaveSeguraKey,
       value: base64Encode(novaChave.bytes),
+      aOptions: androidOptions,
     );
     print('🔐 Nova chave criada e salva. Tamanho: ${novaChave.bytes.length}');
     return novaChave.bytes;
   } else {
-    // Chave já existe, decodifica base64 para bytes
     final chave = base64Decode(chaveBase64);
     print('🔐 Chave carregada. Tamanho: ${chave.length}');
     return chave;
