@@ -140,7 +140,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.mel.withOpacity(0.85),
+        backgroundColor: AppColors.mel,
         elevation: 2,
         centerTitle: true,
         title: selecionando

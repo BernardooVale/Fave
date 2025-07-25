@@ -1,0 +1,122 @@
+{
+  "@@locale": "de",
+  "config": "Einstellungen",
+  "lingua": "Sprache",
+  "excluirPerfil": "Profil(e) löschen",
+  "deleteProfilesConfirm": "Möchten Sie wirklich {quantidade} Profil(e) löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "@deleteProfilesConfirm": {
+    "description": "Mensagem de confirmação de exclusão de perfis",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "deleteItemsConfirm": "Möchten Sie wirklich {quantidade} Element(e) löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "@deleteItemsConfirm": {
+    "description": "Mensagem de confirmação de exclusão de itens",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "perfis": "Profile",
+  "excluir": "Löschen",
+  "semPerfis": "Kein Profil erstellt",
+  "buscarPerfil": "Profil suchen...",
+  "apagar": "Löschen",
+  "novoPerfil": "Neues Profil",
+  "limpar": "Leeren",
+  "digiteNomePerfil": "Geben Sie den Profilnamen ein",
+  "digiteumNome": "Geben Sie einen Namen ein",
+  "perfilExiste": "Profil existiert bereits",
+  "perfilCadastrado": "Profil gespeichert",
+  "confirmarExclusaoItems": "Löschen bestätigen",
+  "compartilhar": "Teilen",
+  "numero": "Nummer",
+  "orgao": "Behörde",
+  "dataEmissao": "Ausgabedatum",
+  "dataVencimento": "Ablaufdatum",
+  "dateDisplay": "{data}",
+  "@dateDisplay": {
+    "description": "Formato de exibição da data.",
+    "placeholders": {
+      "data": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "editPasswordTitle": "Passwort bearbeiten",
+  "passwordNameLabel": "Passwortname",
+  "passwordLabel": "Passwort",
+  "randomPasswordText": "Zufälliges Passwort",
+  "cancelButtonText": "Abbrechen",
+  "confirmButtonText": "Bestätigen",
+  "perfilNaoEncontrado": "Profil nicht gefunden",
+  "filterByTypesTitle": "Nach Typ filtern",
+  "foldersFilterLabel": "Ordner",
+  "passwordsFilterLabel": "Passwörter",
+  "documentsFilterLabel": "Dokumente",
+  "applyButtonText": "Anwenden",
+  "selectAnItemNotification": "Bitte ein Element auswählen",
+  "whatDoYouWantToCreateTitle": "Was möchten Sie erstellen?",
+  "createFolderOption": "Ordner erstellen",
+  "createPasswordOption": "Passwort erstellen",
+  "createDocumentOption": "Dokument erstellen",
+  "targetMustBeUserOrFolderException": "Ziel muss ein Benutzer oder Ordner sein",
+  "newFolderTitle": "Neuer Ordner",
+  "folderNameLabel": "Ordnername",
+  "writeANameNotification": "Geben Sie einen Namen ein",
+  "escrevaNumeroNotificacao": "Geben Sie eine Nummer ein",
+  "documentoCadastrado": "Dokument gespeichert",
+  "folderCreatedNotification": "Ordner erstellt",
+  "newPasswordTitle": "Neues Passwort",
+  "writeAPasswordNotification": "Geben Sie ein Passwort ein",
+  "passwordRegisteredNotification": "Passwort gespeichert",
+  "closeButtonTooltip": "Schließen",
+  "removePhotoButtonTooltip": "Foto entfernen",
+  "newDocumentTitle": "Neues Dokument",
+  "documentNameLabel": "Dokumentname*",
+  "documentNumberLabel": "Nummer*",
+  "issuingBodyLabel": "Ausstellende Behörde",
+  "issueDateLabel": "Ausgabedatum",
+  "issueDateDisplay": "Ausgabe: {day}/{month}/{year}",
+  "expirationDateLabel": "Ablaufdatum",
+  "expirationDateDisplay": "Ablauf: {day}/{month}/{year}",
+  "addPhotosText": "Fotos hinzufügen",
+  "saveButtonText": "Speichern",
+  "sizeLabel": "Größe",
+  "lowercaseLettersLabel": "Kleinbuchstaben",
+  "uppercaseLettersLabel": "Großbuchstaben",
+  "numbersLabel": "Zahlen",
+  "specialCharactersLabel": "Sonderzeichen (!@#$%)",
+  "loadingData": "Lade Daten...",
+  "userNotFound": "Benutzer nicht gefunden",
+  "selectedItemsCount": "{count,plural,one{{count} ausgewählt}other{{count} ausgewählt}}",
+  "@selectedItemsCount": {
+    "description": "Quantidade de itens selecionados",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hidePasswordsTooltip": "Passwörter verbergen",
+  "showPasswordsTooltip": "Passwörter anzeigen",
+  "searchHintText": "Suchen...",
+  "searchButtonText": "Suchen",
+  "noItemsToShow": "Keine Elemente zum Anzeigen.",
+  "favoriteTooltip": "Favorit",
+  "markFavoriteTooltip": "Als Favorit markieren",
+  "copyPasswordTooltip": "Passwort kopieren",
+  "passwordCopiedNotification": "Passwort kopiert",
+  "copyDocumentNumberTooltip": "Nummer kopieren",
+  "documentNumberCopiedNotification": "Nummer kopiert",
+  "filtersButtonLabel": "Filter",
+  "deleteSelectedItemsTooltip": "Ausgewählte Elemente löschen",
+  "addNewItemTooltip": "Neues Element hinzufügen"
+}

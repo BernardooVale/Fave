@@ -1,0 +1,122 @@
+{
+  "@@locale": "ar",
+  "config": "الإعدادات",
+  "lingua": "اللغة",
+  "excluirPerfil": "حذف الملف الشخصي(الملفات)",
+  "deleteProfilesConfirm": "هل تريد حقًا حذف {quantidade} ملف(ات) شخصي؟ لا يمكن التراجع عن هذا الإجراء.",
+  "@deleteProfilesConfirm": {
+    "description": "Mensagem de confirmação de exclusão de perfis",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "deleteItemsConfirm": "هل تريد حقًا حذف {quantidade} عنصر(عناصر)؟ لا يمكن التراجع عن هذا الإجراء.",
+  "@deleteItemsConfirm": {
+    "description": "Mensagem de confirmação de exclusão de itens",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "perfis": "الملفات الشخصية",
+  "excluir": "حذف",
+  "semPerfis": "لم يتم إنشاء أي ملف شخصي",
+  "buscarPerfil": "ابحث عن ملف شخصي...",
+  "apagar": "مسح",
+  "novoPerfil": "ملف شخصي جديد",
+  "limpar": "تنظيف",
+  "digiteNomePerfil": "أدخل اسم الملف الشخصي",
+  "digiteumNome": "أدخل اسمًا",
+  "perfilExiste": "الملف الشخصي موجود بالفعل",
+  "perfilCadastrado": "تم تسجيل الملف الشخصي",
+  "confirmarExclusaoItems": "تأكيد الحذف",
+  "compartilhar": "مشاركة",
+  "numero": "الرقم",
+  "orgao": "الهيئة",
+  "dataEmissao": "تاريخ الإصدار",
+  "dataVencimento": "تاريخ الانتهاء",
+  "dateDisplay": "{data}",
+  "@dateDisplay": {
+    "description": "Formato de exibição da data.",
+    "placeholders": {
+      "data": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "editPasswordTitle": "تعديل كلمة المرور",
+  "passwordNameLabel": "اسم كلمة المرور",
+  "passwordLabel": "كلمة المرور",
+  "randomPasswordText": "كلمة مرور عشوائية",
+  "cancelButtonText": "إلغاء",
+  "confirmButtonText": "تأكيد",
+  "perfilNaoEncontrado": "لم يتم العثور على الملف الشخصي",
+  "filterByTypesTitle": "تصفية حسب الأنواع",
+  "foldersFilterLabel": "المجلدات",
+  "passwordsFilterLabel": "كلمات المرور",
+  "documentsFilterLabel": "الوثائق",
+  "applyButtonText": "تطبيق",
+  "selectAnItemNotification": "اختر عنصرًا",
+  "whatDoYouWantToCreateTitle": "ماذا تريد أن تنشئ؟",
+  "createFolderOption": "إنشاء مجلد",
+  "createPasswordOption": "إنشاء كلمة مرور",
+  "createDocumentOption": "إنشاء وثيقة",
+  "targetMustBeUserOrFolderException": "يجب أن تكون الوجهة مستخدمًا أو مجلدًا",
+  "newFolderTitle": "مجلد جديد",
+  "folderNameLabel": "اسم المجلد",
+  "writeANameNotification": "اكتب اسمًا",
+  "escrevaNumeroNotificacao": "اكتب رقمًا",
+  "documentoCadastrado": "تم تسجيل الوثيقة",
+  "folderCreatedNotification": "تم إنشاء المجلد",
+  "newPasswordTitle": "كلمة مرور جديدة",
+  "writeAPasswordNotification": "اكتب كلمة مرور",
+  "passwordRegisteredNotification": "تم تسجيل كلمة المرور",
+  "closeButtonTooltip": "إغلاق",
+  "removePhotoButtonTooltip": "إزالة الصورة",
+  "newDocumentTitle": "وثيقة جديدة",
+  "documentNameLabel": "اسم الوثيقة*",
+  "documentNumberLabel": "الرقم*",
+  "issuingBodyLabel": "الجهة المُصدرة",
+  "issueDateLabel": "تاريخ الإصدار",
+  "issueDateDisplay": "الإصدار: {day}/{month}/{year}",
+  "expirationDateLabel": "تاريخ الانتهاء",
+  "expirationDateDisplay": "الانتهاء: {day}/{month}/{year}",
+  "addPhotosText": "إضافة صور",
+  "saveButtonText": "حفظ",
+  "sizeLabel": "الحجم",
+  "lowercaseLettersLabel": "أحرف صغيرة",
+  "uppercaseLettersLabel": "أحرف كبيرة",
+  "numbersLabel": "أرقام",
+  "specialCharactersLabel": "أحرف خاصة (!@#$%)",
+  "loadingData": "جار التحميل...",
+  "userNotFound": "المستخدم غير موجود",
+  "selectedItemsCount": "{count,plural,one{{count} محدد}other{{count} محددة}}",
+  "@selectedItemsCount": {
+    "description": "Quantidade de itens selecionados",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hidePasswordsTooltip": "إخفاء كلمات المرور",
+  "showPasswordsTooltip": "إظهار كلمات المرور",
+  "searchHintText": "بحث...",
+  "searchButtonText": "بحث",
+  "noItemsToShow": "لا توجد عناصر لعرضها.",
+  "favoriteTooltip": "مفضل",
+  "markFavoriteTooltip": "وضع كمفضل",
+  "copyPasswordTooltip": "نسخ كلمة المرور",
+  "passwordCopiedNotification": "تم نسخ كلمة المرور",
+  "copyDocumentNumberTooltip": "نسخ الرقم",
+  "documentNumberCopiedNotification": "تم نسخ الرقم",
+  "filtersButtonLabel": "الفلاتر",
+  "deleteSelectedItemsTooltip": "حذف العناصر المحددة",
+  "addNewItemTooltip": "إضافة عنصر جديد"
+}

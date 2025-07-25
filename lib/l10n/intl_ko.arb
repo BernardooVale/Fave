@@ -1,0 +1,122 @@
+{
+  "@@locale": "ko",
+  "config": "설정",
+  "lingua": "언어",
+  "excluirPerfil": "프로필 삭제",
+  "deleteProfilesConfirm": "{quantidade}개의 프로필을 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+  "@deleteProfilesConfirm": {
+    "description": "프로필 삭제 확인 메시지",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "deleteItemsConfirm": "{quantidade}개의 항목을 정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+  "@deleteItemsConfirm": {
+    "description": "항목 삭제 확인 메시지",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "perfis": "프로필",
+  "excluir": "삭제",
+  "semPerfis": "생성된 프로필이 없습니다",
+  "buscarPerfil": "프로필 검색...",
+  "apagar": "삭제",
+  "novoPerfil": "새 프로필",
+  "limpar": "지우기",
+  "digiteNomePerfil": "프로필 이름 입력",
+  "digiteumNome": "이름 입력",
+  "perfilExiste": "프로필이 이미 존재합니다",
+  "perfilCadastrado": "프로필이 저장되었습니다",
+  "confirmarExclusaoItems": "삭제 확인",
+  "compartilhar": "공유",
+  "numero": "번호",
+  "orgao": "기관",
+  "dataEmissao": "발행일",
+  "dataVencimento": "만료일",
+  "dateDisplay": "{data}",
+  "@dateDisplay": {
+    "description": "날짜 표시 형식",
+    "placeholders": {
+      "data": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "editPasswordTitle": "비밀번호 수정",
+  "passwordNameLabel": "비밀번호 이름",
+  "passwordLabel": "비밀번호",
+  "randomPasswordText": "무작위 비밀번호",
+  "cancelButtonText": "취소",
+  "confirmButtonText": "확인",
+  "perfilNaoEncontrado": "프로필을 찾을 수 없습니다",
+  "filterByTypesTitle": "유형별 필터",
+  "foldersFilterLabel": "폴더",
+  "passwordsFilterLabel": "비밀번호",
+  "documentsFilterLabel": "문서",
+  "applyButtonText": "적용",
+  "selectAnItemNotification": "항목을 선택하세요",
+  "whatDoYouWantToCreateTitle": "무엇을 생성하시겠습니까?",
+  "createFolderOption": "폴더 생성",
+  "createPasswordOption": "비밀번호 생성",
+  "createDocumentOption": "문서 생성",
+  "targetMustBeUserOrFolderException": "대상은 사용자 또는 폴더여야 합니다",
+  "newFolderTitle": "새 폴더",
+  "folderNameLabel": "폴더 이름",
+  "writeANameNotification": "이름을 입력하세요",
+  "escrevaNumeroNotificacao": "번호를 입력하세요",
+  "documentoCadastrado": "문서가 저장되었습니다",
+  "folderCreatedNotification": "폴더가 생성되었습니다",
+  "newPasswordTitle": "새 비밀번호",
+  "writeAPasswordNotification": "비밀번호를 입력하세요",
+  "passwordRegisteredNotification": "비밀번호가 저장되었습니다",
+  "closeButtonTooltip": "닫기",
+  "removePhotoButtonTooltip": "사진 제거",
+  "newDocumentTitle": "새 문서",
+  "documentNameLabel": "문서 이름*",
+  "documentNumberLabel": "번호*",
+  "issuingBodyLabel": "발행 기관",
+  "issueDateLabel": "발행일",
+  "issueDateDisplay": "발행: {day}/{month}/{year}",
+  "expirationDateLabel": "만료일",
+  "expirationDateDisplay": "만료: {day}/{month}/{year}",
+  "addPhotosText": "사진 추가",
+  "saveButtonText": "저장",
+  "sizeLabel": "크기",
+  "lowercaseLettersLabel": "소문자",
+  "uppercaseLettersLabel": "대문자",
+  "numbersLabel": "숫자",
+  "specialCharactersLabel": "특수 문자 (!@#$%)",
+  "loadingData": "로딩 중...",
+  "userNotFound": "사용자를 찾을 수 없습니다",
+  "selectedItemsCount": "{count,plural,one{{count}개 선택됨}other{{count}개 선택됨}}",
+  "@selectedItemsCount": {
+    "description": "선택된 항목 수",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hidePasswordsTooltip": "비밀번호 숨기기",
+  "showPasswordsTooltip": "비밀번호 표시",
+  "searchHintText": "검색...",
+  "searchButtonText": "검색",
+  "noItemsToShow": "표시할 항목이 없습니다.",
+  "favoriteTooltip": "즐겨찾기",
+  "markFavoriteTooltip": "즐겨찾기로 표시",
+  "copyPasswordTooltip": "비밀번호 복사",
+  "passwordCopiedNotification": "비밀번호가 복사되었습니다",
+  "copyDocumentNumberTooltip": "번호 복사",
+  "documentNumberCopiedNotification": "번호가 복사되었습니다",
+  "filtersButtonLabel": "필터",
+  "deleteSelectedItemsTooltip": "선택한 항목 삭제",
+  "addNewItemTooltip": "새 항목 추가"
+}

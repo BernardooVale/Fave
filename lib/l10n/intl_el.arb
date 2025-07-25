@@ -1,0 +1,122 @@
+{
+  "@@locale": "el",
+  "config": "Ρυθμίσεις",
+  "lingua": "Γλώσσα",
+  "excluirPerfil": "Διαγραφή προφίλ",
+  "deleteProfilesConfirm": "Είστε σίγουροι ότι θέλετε να διαγράψετε {quantidade} προφίλ; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+  "@deleteProfilesConfirm": {
+    "description": "Μήνυμα επιβεβαίωσης διαγραφής προφίλ",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "deleteItemsConfirm": "Είστε σίγουροι ότι θέλετε να διαγράψετε {quantidade} αντικείμενα; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+  "@deleteItemsConfirm": {
+    "description": "Μήνυμα επιβεβαίωσης διαγραφής αντικειμένων",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "perfis": "Προφίλ",
+  "excluir": "Διαγραφή",
+  "semPerfis": "Δεν υπάρχουν προφίλ",
+  "buscarPerfil": "Αναζήτηση προφίλ...",
+  "apagar": "Διαγραφή",
+  "novoPerfil": "Νέο προφίλ",
+  "limpar": "Καθαρισμός",
+  "digiteNomePerfil": "Εισάγετε όνομα προφίλ",
+  "digiteumNome": "Εισάγετε όνομα",
+  "perfilExiste": "Το προφίλ υπάρχει ήδη",
+  "perfilCadastrado": "Το προφίλ καταχωρήθηκε",
+  "confirmarExclusaoItems": "Επιβεβαίωση διαγραφής",
+  "compartilhar": "Κοινή χρήση",
+  "numero": "Αριθμός",
+  "orgao": "Οργανισμός",
+  "dataEmissao": "Ημερομηνία έκδοσης",
+  "dataVencimento": "Ημερομηνία λήξης",
+  "dateDisplay": "{data}",
+  "@dateDisplay": {
+    "description": "Μορφή εμφάνισης ημερομηνίας",
+    "placeholders": {
+      "data": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "editPasswordTitle": "Επεξεργασία κωδικού",
+  "passwordNameLabel": "Όνομα κωδικού",
+  "passwordLabel": "Κωδικός",
+  "randomPasswordText": "Τυχαίος κωδικός",
+  "cancelButtonText": "Ακύρωση",
+  "confirmButtonText": "Επιβεβαίωση",
+  "perfilNaoEncontrado": "Το προφίλ δεν βρέθηκε",
+  "filterByTypesTitle": "Φιλτράρισμα κατά τύπο",
+  "foldersFilterLabel": "Φάκελοι",
+  "passwordsFilterLabel": "Κωδικοί",
+  "documentsFilterLabel": "Έγγραφα",
+  "applyButtonText": "Εφαρμογή",
+  "selectAnItemNotification": "Επιλέξτε ένα στοιχείο",
+  "whatDoYouWantToCreateTitle": "Τι θέλετε να δημιουργήσετε;",
+  "createFolderOption": "Δημιουργία φακέλου",
+  "createPasswordOption": "Δημιουργία κωδικού",
+  "createDocumentOption": "Δημιουργία εγγράφου",
+  "targetMustBeUserOrFolderException": "Ο προορισμός πρέπει να είναι χρήστης ή φάκελος",
+  "newFolderTitle": "Νέος φάκελος",
+  "folderNameLabel": "Όνομα φακέλου",
+  "writeANameNotification": "Εισάγετε ένα όνομα",
+  "escrevaNumeroNotificacao": "Εισάγετε έναν αριθμό",
+  "documentoCadastrado": "Το έγγραφο καταχωρήθηκε",
+  "folderCreatedNotification": "Ο φάκελος δημιουργήθηκε",
+  "newPasswordTitle": "Νέος κωδικός",
+  "writeAPasswordNotification": "Εισάγετε κωδικό",
+  "passwordRegisteredNotification": "Ο κωδικός καταχωρήθηκε",
+  "closeButtonTooltip": "Κλείσιμο",
+  "removePhotoButtonTooltip": "Αφαίρεση φωτογραφίας",
+  "newDocumentTitle": "Νέο έγγραφο",
+  "documentNameLabel": "Όνομα εγγράφου*",
+  "documentNumberLabel": "Αριθμός*",
+  "issuingBodyLabel": "Φορέας έκδοσης",
+  "issueDateLabel": "Ημερομηνία έκδοσης",
+  "issueDateDisplay": "Έκδοση: {day}/{month}/{year}",
+  "expirationDateLabel": "Ημερομηνία λήξης",
+  "expirationDateDisplay": "Λήξη: {day}/{month}/{year}",
+  "addPhotosText": "Προσθήκη φωτογραφιών",
+  "saveButtonText": "Αποθήκευση",
+  "sizeLabel": "Μέγεθος",
+  "lowercaseLettersLabel": "Πεζά γράμματα",
+  "uppercaseLettersLabel": "Κεφαλαία γράμματα",
+  "numbersLabel": "Αριθμοί",
+  "specialCharactersLabel": "Ειδικοί χαρακτήρες (!@#$%)",
+  "loadingData": "Φόρτωση...",
+  "userNotFound": "Ο χρήστης δεν βρέθηκε",
+  "selectedItemsCount": "{count,plural,one{{count} επιλεγμένο}other{{count} επιλεγμένα}}",
+  "@selectedItemsCount": {
+    "description": "Πλήθος επιλεγμένων αντικειμένων",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hidePasswordsTooltip": "Απόκρυψη κωδικών",
+  "showPasswordsTooltip": "Εμφάνιση κωδικών",
+  "searchHintText": "Αναζήτηση...",
+  "searchButtonText": "Αναζήτηση",
+  "noItemsToShow": "Δεν υπάρχουν στοιχεία για εμφάνιση.",
+  "favoriteTooltip": "Αγαπημένα",
+  "markFavoriteTooltip": "Σήμανση ως αγαπημένο",
+  "copyPasswordTooltip": "Αντιγραφή κωδικού",
+  "passwordCopiedNotification": "Ο κωδικός αντιγράφηκε",
+  "copyDocumentNumberTooltip": "Αντιγραφή αριθμού",
+  "documentNumberCopiedNotification": "Ο αριθμός αντιγράφηκε",
+  "filtersButtonLabel": "Φίλτρα",
+  "deleteSelectedItemsTooltip": "Διαγραφή επιλεγμένων αντικειμένων",
+  "addNewItemTooltip": "Προσθήκη νέου αντικειμένου"
+}

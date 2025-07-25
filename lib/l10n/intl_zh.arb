@@ -1,0 +1,122 @@
+{
+  "@@locale": "zh",
+  "config": "设置",
+  "lingua": "语言",
+  "excluirPerfil": "删除个人资料",
+  "deleteProfilesConfirm": "您确定要删除 {quantidade} 个个人资料吗？此操作无法撤销。",
+  "@deleteProfilesConfirm": {
+    "description": "Mensagem de confirmação de exclusão de perfis",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "deleteItemsConfirm": "您确定要删除 {quantidade} 个项目吗？此操作无法撤销。",
+  "@deleteItemsConfirm": {
+    "description": "Mensagem de confirmação de exclusão de itens",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "perfis": "个人资料",
+  "excluir": "删除",
+  "semPerfis": "未创建个人资料",
+  "buscarPerfil": "搜索个人资料...",
+  "apagar": "清除",
+  "novoPerfil": "新建个人资料",
+  "limpar": "清空",
+  "digiteNomePerfil": "请输入个人资料名称",
+  "digiteumNome": "请输入名称",
+  "perfilExiste": "个人资料已存在",
+  "perfilCadastrado": "个人资料已保存",
+  "confirmarExclusaoItems": "确认删除",
+  "compartilhar": "分享",
+  "numero": "编号",
+  "orgao": "机构",
+  "dataEmissao": "签发日期",
+  "dataVencimento": "到期日期",
+  "dateDisplay": "{data}",
+  "@dateDisplay": {
+    "description": "Formato de exibição da data.",
+    "placeholders": {
+      "data": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "editPasswordTitle": "编辑密码",
+  "passwordNameLabel": "密码名称",
+  "passwordLabel": "密码",
+  "randomPasswordText": "随机密码",
+  "cancelButtonText": "取消",
+  "confirmButtonText": "确认",
+  "perfilNaoEncontrado": "未找到个人资料",
+  "filterByTypesTitle": "按类型筛选",
+  "foldersFilterLabel": "文件夹",
+  "passwordsFilterLabel": "密码",
+  "documentsFilterLabel": "文档",
+  "applyButtonText": "应用",
+  "selectAnItemNotification": "请选择一个项目",
+  "whatDoYouWantToCreateTitle": "您想创建什么？",
+  "createFolderOption": "创建文件夹",
+  "createPasswordOption": "创建密码",
+  "createDocumentOption": "创建文档",
+  "targetMustBeUserOrFolderException": "目标必须是用户或文件夹",
+  "newFolderTitle": "新建文件夹",
+  "folderNameLabel": "文件夹名称",
+  "writeANameNotification": "请输入名称",
+  "escrevaNumeroNotificacao": "请输入编号",
+  "documentoCadastrado": "文档已保存",
+  "folderCreatedNotification": "文件夹已创建",
+  "newPasswordTitle": "新建密码",
+  "writeAPasswordNotification": "请输入密码",
+  "passwordRegisteredNotification": "密码已保存",
+  "closeButtonTooltip": "关闭",
+  "removePhotoButtonTooltip": "删除照片",
+  "newDocumentTitle": "新建文档",
+  "documentNameLabel": "文档名称*",
+  "documentNumberLabel": "编号*",
+  "issuingBodyLabel": "签发机构",
+  "issueDateLabel": "签发日期",
+  "issueDateDisplay": "签发：{day}/{month}/{year}",
+  "expirationDateLabel": "到期日期",
+  "expirationDateDisplay": "到期：{day}/{month}/{year}",
+  "addPhotosText": "添加照片",
+  "saveButtonText": "保存",
+  "sizeLabel": "长度",
+  "lowercaseLettersLabel": "小写字母",
+  "uppercaseLettersLabel": "大写字母",
+  "numbersLabel": "数字",
+  "specialCharactersLabel": "特殊字符 (!@#$%)",
+  "loadingData": "正在加载...",
+  "userNotFound": "未找到用户",
+  "selectedItemsCount": "{count,plural,one{{count} 个已选择}other{{count} 个已选择}}",
+  "@selectedItemsCount": {
+    "description": "Quantidade de itens selecionados",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hidePasswordsTooltip": "隐藏密码",
+  "showPasswordsTooltip": "显示密码",
+  "searchHintText": "搜索...",
+  "searchButtonText": "搜索",
+  "noItemsToShow": "没有可显示的项目。",
+  "favoriteTooltip": "收藏",
+  "markFavoriteTooltip": "标记为收藏",
+  "copyPasswordTooltip": "复制密码",
+  "passwordCopiedNotification": "密码已复制",
+  "copyDocumentNumberTooltip": "复制编号",
+  "documentNumberCopiedNotification": "编号已复制",
+  "filtersButtonLabel": "筛选器",
+  "deleteSelectedItemsTooltip": "删除选中项目",
+  "addNewItemTooltip": "添加新项目"
+}

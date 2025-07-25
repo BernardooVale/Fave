@@ -168,7 +168,7 @@ class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMix
               onPressed: () => setState(() => isVisible = !isVisible),
             ),
         ],
-        backgroundColor: AppColors.mel.withOpacity(0.7),
+        backgroundColor: AppColors.mel,
         elevation: 2,
         bottom: null,
       ),

@@ -1,0 +1,122 @@
+{
+  "@@locale": "ru",
+  "config": "Настройки",
+  "lingua": "Язык",
+  "excluirPerfil": "Удалить профиль(и)",
+  "deleteProfilesConfirm": "Вы уверены, что хотите удалить {quantidade} профиль(ей)? Это действие невозможно отменить.",
+  "@deleteProfilesConfirm": {
+    "description": "Подтверждение удаления профилей",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "deleteItemsConfirm": "Вы уверены, что хотите удалить {quantidade} элемент(ов)? Это действие невозможно отменить.",
+  "@deleteItemsConfirm": {
+    "description": "Подтверждение удаления элементов",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "perfis": "Профили",
+  "excluir": "Удалить",
+  "semPerfis": "Профили не созданы",
+  "buscarPerfil": "Поиск профиля...",
+  "apagar": "Удалить",
+  "novoPerfil": "Новый профиль",
+  "limpar": "Очистить",
+  "digiteNomePerfil": "Введите имя профиля",
+  "digiteumNome": "Введите имя",
+  "perfilExiste": "Профиль уже существует",
+  "perfilCadastrado": "Профиль сохранён",
+  "confirmarExclusaoItems": "Подтвердите удаление",
+  "compartilhar": "Поделиться",
+  "numero": "Номер",
+  "orgao": "Орган",
+  "dataEmissao": "Дата выдачи",
+  "dataVencimento": "Дата окончания",
+  "dateDisplay": "{data}",
+  "@dateDisplay": {
+    "description": "Формат отображения даты",
+    "placeholders": {
+      "data": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "editPasswordTitle": "Редактировать пароль",
+  "passwordNameLabel": "Имя пароля",
+  "passwordLabel": "Пароль",
+  "randomPasswordText": "Случайный пароль",
+  "cancelButtonText": "Отмена",
+  "confirmButtonText": "Подтвердить",
+  "perfilNaoEncontrado": "Профиль не найден",
+  "filterByTypesTitle": "Фильтр по типу",
+  "foldersFilterLabel": "Папки",
+  "passwordsFilterLabel": "Пароли",
+  "documentsFilterLabel": "Документы",
+  "applyButtonText": "Применить",
+  "selectAnItemNotification": "Выберите элемент",
+  "whatDoYouWantToCreateTitle": "Что вы хотите создать?",
+  "createFolderOption": "Создать папку",
+  "createPasswordOption": "Создать пароль",
+  "createDocumentOption": "Создать документ",
+  "targetMustBeUserOrFolderException": "Цель должна быть пользователем или папкой",
+  "newFolderTitle": "Новая папка",
+  "folderNameLabel": "Имя папки",
+  "writeANameNotification": "Введите имя",
+  "escrevaNumeroNotificacao": "Введите номер",
+  "documentoCadastrado": "Документ сохранён",
+  "folderCreatedNotification": "Папка создана",
+  "newPasswordTitle": "Новый пароль",
+  "writeAPasswordNotification": "Введите пароль",
+  "passwordRegisteredNotification": "Пароль сохранён",
+  "closeButtonTooltip": "Закрыть",
+  "removePhotoButtonTooltip": "Удалить фото",
+  "newDocumentTitle": "Новый документ",
+  "documentNameLabel": "Имя документа*",
+  "documentNumberLabel": "Номер*",
+  "issuingBodyLabel": "Орган выдачи",
+  "issueDateLabel": "Дата выдачи",
+  "issueDateDisplay": "Выдано: {day}/{month}/{year}",
+  "expirationDateLabel": "Дата окончания",
+  "expirationDateDisplay": "Истекает: {day}/{month}/{year}",
+  "addPhotosText": "Добавить фото",
+  "saveButtonText": "Сохранить",
+  "sizeLabel": "Длина",
+  "lowercaseLettersLabel": "Строчные буквы",
+  "uppercaseLettersLabel": "Прописные буквы",
+  "numbersLabel": "Цифры",
+  "specialCharactersLabel": "Спец. символы (!@#$%)",
+  "loadingData": "Загрузка данных...",
+  "userNotFound": "Пользователь не найден",
+  "selectedItemsCount": "{count,plural,one{{count} выбран} few{{count} выбраны} many{{count} выбрано} other{{count} выбрано}}",
+  "@selectedItemsCount": {
+    "description": "Количество выбранных элементов",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hidePasswordsTooltip": "Скрыть пароли",
+  "showPasswordsTooltip": "Показать пароли",
+  "searchHintText": "Поиск...",
+  "searchButtonText": "Поиск",
+  "noItemsToShow": "Нет элементов для отображения.",
+  "favoriteTooltip": "Избранное",
+  "markFavoriteTooltip": "Отметить как избранное",
+  "copyPasswordTooltip": "Копировать пароль",
+  "passwordCopiedNotification": "Пароль скопирован",
+  "copyDocumentNumberTooltip": "Копировать номер",
+  "documentNumberCopiedNotification": "Номер скопирован",
+  "filtersButtonLabel": "Фильтры",
+  "deleteSelectedItemsTooltip": "Удалить выбранное",
+  "addNewItemTooltip": "Добавить новый элемент"
+}

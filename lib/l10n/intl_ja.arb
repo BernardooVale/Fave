@@ -1,0 +1,122 @@
+{
+  "@@locale": "ja",
+  "config": "設定",
+  "lingua": "言語",
+  "excluirPerfil": "プロフィールを削除",
+  "deleteProfilesConfirm": "本当に{quantidade}件のプロフィールを削除しますか？この操作は元に戻せません。",
+  "@deleteProfilesConfirm": {
+    "description": "プロフィール削除の確認メッセージ",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "deleteItemsConfirm": "本当に{quantidade}件のアイテムを削除しますか？この操作は元に戻せません。",
+  "@deleteItemsConfirm": {
+    "description": "アイテム削除の確認メッセージ",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "perfis": "プロフィール",
+  "excluir": "削除",
+  "semPerfis": "プロフィールが作成されていません",
+  "buscarPerfil": "プロフィールを検索...",
+  "apagar": "消去",
+  "novoPerfil": "新しいプロフィール",
+  "limpar": "クリア",
+  "digiteNomePerfil": "プロフィール名を入力してください",
+  "digiteumNome": "名前を入力してください",
+  "perfilExiste": "プロフィールはすでに存在します",
+  "perfilCadastrado": "プロフィールが登録されました",
+  "confirmarExclusaoItems": "削除を確認",
+  "compartilhar": "共有",
+  "numero": "番号",
+  "orgao": "機関",
+  "dataEmissao": "発行日",
+  "dataVencimento": "有効期限",
+  "dateDisplay": "{data}",
+  "@dateDisplay": {
+    "description": "日付表示形式",
+    "placeholders": {
+      "data": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "editPasswordTitle": "パスワード編集",
+  "passwordNameLabel": "パスワード名",
+  "passwordLabel": "パスワード",
+  "randomPasswordText": "ランダムパスワード",
+  "cancelButtonText": "キャンセル",
+  "confirmButtonText": "確認",
+  "perfilNaoEncontrado": "プロフィールが見つかりません",
+  "filterByTypesTitle": "種類でフィルター",
+  "foldersFilterLabel": "フォルダ",
+  "passwordsFilterLabel": "パスワード",
+  "documentsFilterLabel": "ドキュメント",
+  "applyButtonText": "適用",
+  "selectAnItemNotification": "アイテムを選択してください",
+  "whatDoYouWantToCreateTitle": "何を作成しますか？",
+  "createFolderOption": "フォルダを作成",
+  "createPasswordOption": "パスワードを作成",
+  "createDocumentOption": "ドキュメントを作成",
+  "targetMustBeUserOrFolderException": "ターゲットはユーザーまたはフォルダでなければなりません",
+  "newFolderTitle": "新しいフォルダ",
+  "folderNameLabel": "フォルダ名",
+  "writeANameNotification": "名前を入力してください",
+  "escrevaNumeroNotificacao": "番号を入力してください",
+  "documentoCadastrado": "ドキュメントが登録されました",
+  "folderCreatedNotification": "フォルダが作成されました",
+  "newPasswordTitle": "新しいパスワード",
+  "writeAPasswordNotification": "パスワードを入力してください",
+  "passwordRegisteredNotification": "パスワードが登録されました",
+  "closeButtonTooltip": "閉じる",
+  "removePhotoButtonTooltip": "写真を削除",
+  "newDocumentTitle": "新しいドキュメント",
+  "documentNameLabel": "ドキュメント名*",
+  "documentNumberLabel": "番号*",
+  "issuingBodyLabel": "発行機関",
+  "issueDateLabel": "発行日",
+  "issueDateDisplay": "発行日: {day}/{month}/{year}",
+  "expirationDateLabel": "有効期限",
+  "expirationDateDisplay": "有効期限: {day}/{month}/{year}",
+  "addPhotosText": "写真を追加",
+  "saveButtonText": "保存",
+  "sizeLabel": "サイズ",
+  "lowercaseLettersLabel": "小文字",
+  "uppercaseLettersLabel": "大文字",
+  "numbersLabel": "数字",
+  "specialCharactersLabel": "特殊文字 (!@#$%)",
+  "loadingData": "読み込み中...",
+  "userNotFound": "ユーザーが見つかりません",
+  "selectedItemsCount": "{count,plural,one{{count} 件選択}other{{count} 件選択}}",
+  "@selectedItemsCount": {
+    "description": "選択されたアイテムの数",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hidePasswordsTooltip": "パスワードを隠す",
+  "showPasswordsTooltip": "パスワードを表示",
+  "searchHintText": "検索...",
+  "searchButtonText": "検索",
+  "noItemsToShow": "表示するアイテムがありません。",
+  "favoriteTooltip": "お気に入り",
+  "markFavoriteTooltip": "お気に入りに追加",
+  "copyPasswordTooltip": "パスワードをコピー",
+  "passwordCopiedNotification": "パスワードがコピーされました",
+  "copyDocumentNumberTooltip": "番号をコピー",
+  "documentNumberCopiedNotification": "番号がコピーされました",
+  "filtersButtonLabel": "フィルター",
+  "deleteSelectedItemsTooltip": "選択したアイテムを削除",
+  "addNewItemTooltip": "新しいアイテムを追加"
+}

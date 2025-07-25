@@ -185,7 +185,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
             ),
           ],
         ],
-        backgroundColor: AppColors.mel.withOpacity(0.7),
+        backgroundColor: AppColors.mel,
         elevation: 2,
         bottom: null,
       ),

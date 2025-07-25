@@ -1,0 +1,122 @@
+{
+  "@@locale": "hi",
+  "config": "सेटिंग्स",
+  "lingua": "भाषा",
+  "excluirPerfil": "प्रोफ़ाइल हटाएँ",
+  "deleteProfilesConfirm": "क्या आप वाकई {quantidade} प्रोफ़ाइल हटाना चाहते हैं? यह कार्रवाई पूर्ववत नहीं की जा सकती।",
+  "@deleteProfilesConfirm": {
+    "description": "प्रोफ़ाइल हटाने की पुष्टि संदेश",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "deleteItemsConfirm": "क्या आप वाकई {quantidade} आइटम हटाना चाहते हैं? यह कार्रवाई पूर्ववत नहीं की जा सकती।",
+  "@deleteItemsConfirm": {
+    "description": "आइटम हटाने की पुष्टि संदेश",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "perfis": "प्रोफाइल",
+  "excluir": "हटाएँ",
+  "semPerfis": "कोई प्रोफ़ाइल बनाई नहीं गई है",
+  "buscarPerfil": "प्रोफ़ाइल खोजें...",
+  "apagar": "मिटाएँ",
+  "novoPerfil": "नया प्रोफ़ाइल",
+  "limpar": "साफ़ करें",
+  "digiteNomePerfil": "प्रोफ़ाइल का नाम दर्ज करें",
+  "digiteumNome": "नाम दर्ज करें",
+  "perfilExiste": "प्रोफ़ाइल पहले से मौजूद है",
+  "perfilCadastrado": "प्रोफ़ाइल सहेजी गई",
+  "confirmarExclusaoItems": "हटाने की पुष्टि करें",
+  "compartilhar": "साझा करें",
+  "numero": "संख्या",
+  "orgao": "संस्था",
+  "dataEmissao": "जारी करने की तारीख",
+  "dataVencimento": "समाप्ति तिथि",
+  "dateDisplay": "{data}",
+  "@dateDisplay": {
+    "description": "तिथि प्रदर्शित करने का प्रारूप।",
+    "placeholders": {
+      "data": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "editPasswordTitle": "पासवर्ड संपादित करें",
+  "passwordNameLabel": "पासवर्ड का नाम",
+  "passwordLabel": "पासवर्ड",
+  "randomPasswordText": "यादृच्छिक पासवर्ड",
+  "cancelButtonText": "रद्द करें",
+  "confirmButtonText": "पुष्टि करें",
+  "perfilNaoEncontrado": "प्रोफ़ाइल नहीं मिली",
+  "filterByTypesTitle": "प्रकार से फ़िल्टर करें",
+  "foldersFilterLabel": "फ़ोल्डर",
+  "passwordsFilterLabel": "पासवर्ड",
+  "documentsFilterLabel": "दस्तावेज़",
+  "applyButtonText": "लागू करें",
+  "selectAnItemNotification": "कृपया कोई आइटम चुनें",
+  "whatDoYouWantToCreateTitle": "आप क्या बनाना चाहते हैं?",
+  "createFolderOption": "फ़ोल्डर बनाएं",
+  "createPasswordOption": "पासवर्ड बनाएं",
+  "createDocumentOption": "दस्तावेज़ बनाएं",
+  "targetMustBeUserOrFolderException": "लक्ष्य उपयोगकर्ता या फ़ोल्डर होना चाहिए",
+  "newFolderTitle": "नया फ़ोल्डर",
+  "folderNameLabel": "फ़ोल्डर का नाम",
+  "writeANameNotification": "एक नाम लिखें",
+  "escrevaNumeroNotificacao": "एक संख्या लिखें",
+  "documentoCadastrado": "दस्तावेज़ सहेजा गया",
+  "folderCreatedNotification": "फ़ोल्डर बनाया गया",
+  "newPasswordTitle": "नया पासवर्ड",
+  "writeAPasswordNotification": "पासवर्ड लिखें",
+  "passwordRegisteredNotification": "पासवर्ड सहेजा गया",
+  "closeButtonTooltip": "बंद करें",
+  "removePhotoButtonTooltip": "फोटो हटाएं",
+  "newDocumentTitle": "नया दस्तावेज़",
+  "documentNameLabel": "दस्तावेज़ का नाम*",
+  "documentNumberLabel": "संख्या*",
+  "issuingBodyLabel": "जारी करने वाला संस्था",
+  "issueDateLabel": "जारी करने की तारीख",
+  "issueDateDisplay": "जारी: {day}/{month}/{year}",
+  "expirationDateLabel": "समाप्ति तिथि",
+  "expirationDateDisplay": "समाप्ति: {day}/{month}/{year}",
+  "addPhotosText": "फोटो जोड़ें",
+  "saveButtonText": "सहेजें",
+  "sizeLabel": "आकार",
+  "lowercaseLettersLabel": "छोटे अक्षर",
+  "uppercaseLettersLabel": "बड़े अक्षर",
+  "numbersLabel": "संख्याएं",
+  "specialCharactersLabel": "विशेष वर्ण (!@#$%)",
+  "loadingData": "लोड हो रहा है...",
+  "userNotFound": "उपयोगकर्ता नहीं मिला",
+  "selectedItemsCount": "{count,plural,one{{count} चुना गया}other{{count} चुने गए}}",
+  "@selectedItemsCount": {
+    "description": "चयनित आइटमों की संख्या",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hidePasswordsTooltip": "पासवर्ड छुपाएं",
+  "showPasswordsTooltip": "पासवर्ड दिखाएं",
+  "searchHintText": "खोजें...",
+  "searchButtonText": "खोजें",
+  "noItemsToShow": "कोई आइटम नहीं दिखाने के लिए।",
+  "favoriteTooltip": "पसंदीदा",
+  "markFavoriteTooltip": "पसंदीदा के रूप में चिह्नित करें",
+  "copyPasswordTooltip": "पासवर्ड कॉपी करें",
+  "passwordCopiedNotification": "पासवर्ड कॉपी किया गया",
+  "copyDocumentNumberTooltip": "संख्या कॉपी करें",
+  "documentNumberCopiedNotification": "संख्या कॉपी की गई",
+  "filtersButtonLabel": "फ़िल्टर",
+  "deleteSelectedItemsTooltip": "चयनित आइटम हटाएं",
+  "addNewItemTooltip": "नया आइटम जोड़ें"
+}

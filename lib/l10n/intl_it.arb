@@ -1,0 +1,122 @@
+{
+  "@@locale": "it",
+  "config": "Impostazioni",
+  "lingua": "Lingua",
+  "excluirPerfil": "Elimina profilo/i",
+  "deleteProfilesConfirm": "Sei sicuro di voler eliminare {quantidade} profilo/i? Questa azione non può essere annullata.",
+  "@deleteProfilesConfirm": {
+    "description": "Messaggio di conferma per l'eliminazione dei profili",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "deleteItemsConfirm": "Sei sicuro di voler eliminare {quantidade} elemento/i? Questa azione non può essere annullata.",
+  "@deleteItemsConfirm": {
+    "description": "Messaggio di conferma per l'eliminazione di elementi",
+    "placeholders": {
+      "quantidade": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "perfis": "Profili",
+  "excluir": "Elimina",
+  "semPerfis": "Nessun profilo creato",
+  "buscarPerfil": "Cerca profilo...",
+  "apagar": "Cancella",
+  "novoPerfil": "Nuovo profilo",
+  "limpar": "Pulisci",
+  "digiteNomePerfil": "Inserisci il nome del profilo",
+  "digiteumNome": "Inserisci un nome",
+  "perfilExiste": "Il profilo esiste già",
+  "perfilCadastrado": "Profilo salvato",
+  "confirmarExclusaoItems": "Conferma eliminazione",
+  "compartilhar": "Condividi",
+  "numero": "Numero",
+  "orgao": "Ente",
+  "dataEmissao": "Data di emissione",
+  "dataVencimento": "Data di scadenza",
+  "dateDisplay": "{data}",
+  "@dateDisplay": {
+    "description": "Formato di visualizzazione della data.",
+    "placeholders": {
+      "data": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "editPasswordTitle": "Modifica password",
+  "passwordNameLabel": "Nome della password",
+  "passwordLabel": "Password",
+  "randomPasswordText": "Password casuale",
+  "cancelButtonText": "Annulla",
+  "confirmButtonText": "Conferma",
+  "perfilNaoEncontrado": "Profilo non trovato",
+  "filterByTypesTitle": "Filtra per tipo",
+  "foldersFilterLabel": "Cartelle",
+  "passwordsFilterLabel": "Password",
+  "documentsFilterLabel": "Documenti",
+  "applyButtonText": "Applica",
+  "selectAnItemNotification": "Seleziona un elemento",
+  "whatDoYouWantToCreateTitle": "Cosa vuoi creare?",
+  "createFolderOption": "Crea cartella",
+  "createPasswordOption": "Crea password",
+  "createDocumentOption": "Crea documento",
+  "targetMustBeUserOrFolderException": "La destinazione deve essere un utente o una cartella",
+  "newFolderTitle": "Nuova cartella",
+  "folderNameLabel": "Nome della cartella",
+  "writeANameNotification": "Inserisci un nome",
+  "escrevaNumeroNotificacao": "Inserisci un numero",
+  "documentoCadastrado": "Documento salvato",
+  "folderCreatedNotification": "Cartella creata",
+  "newPasswordTitle": "Nuova password",
+  "writeAPasswordNotification": "Inserisci una password",
+  "passwordRegisteredNotification": "Password salvata",
+  "closeButtonTooltip": "Chiudi",
+  "removePhotoButtonTooltip": "Rimuovi foto",
+  "newDocumentTitle": "Nuovo documento",
+  "documentNameLabel": "Nome del documento*",
+  "documentNumberLabel": "Numero*",
+  "issuingBodyLabel": "Ente emittente",
+  "issueDateLabel": "Data di emissione",
+  "issueDateDisplay": "Emissione: {day}/{month}/{year}",
+  "expirationDateLabel": "Data di scadenza",
+  "expirationDateDisplay": "Scadenza: {day}/{month}/{year}",
+  "addPhotosText": "Aggiungi foto",
+  "saveButtonText": "Salva",
+  "sizeLabel": "Lunghezza",
+  "lowercaseLettersLabel": "Lettere minuscole",
+  "uppercaseLettersLabel": "Lettere maiuscole",
+  "numbersLabel": "Numeri",
+  "specialCharactersLabel": "Caratteri speciali (!@#$%)",
+  "loadingData": "Caricamento dati...",
+  "userNotFound": "Utente non trovato",
+  "selectedItemsCount": "{count,plural,one{{count} selezionato}other{{count} selezionati}}",
+  "@selectedItemsCount": {
+    "description": "Quantità di elementi selezionati",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hidePasswordsTooltip": "Nascondi password",
+  "showPasswordsTooltip": "Mostra password",
+  "searchHintText": "Cerca...",
+  "searchButtonText": "Cerca",
+  "noItemsToShow": "Nessun elemento da mostrare.",
+  "favoriteTooltip": "Preferito",
+  "markFavoriteTooltip": "Segna come preferito",
+  "copyPasswordTooltip": "Copia password",
+  "passwordCopiedNotification": "Password copiata",
+  "copyDocumentNumberTooltip": "Copia numero",
+  "documentNumberCopiedNotification": "Numero copiato",
+  "filtersButtonLabel": "Filtri",
+  "deleteSelectedItemsTooltip": "Elimina elementi selezionati",
+  "addNewItemTooltip": "Aggiungi nuovo elemento"
+}
