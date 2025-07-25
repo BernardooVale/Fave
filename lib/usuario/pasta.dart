@@ -10,7 +10,7 @@ import '../itens/item.dart';
 import '../notificacao/notificacao.dart';
 import 'documentoDialog.dart';
 import 'filtroDialog.dart';
-import 'novoItemDialog.dart'; // para showAddOptionDialog
+import 'novoItemDialog.dart';
 import 'filtro.dart';
 import 'deletarItens.dart';
 import 'editSenha.dart';

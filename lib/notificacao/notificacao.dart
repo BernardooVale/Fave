@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// Exibe uma notificação temporária animada na parte superior da tela.
+///
+/// [context]: contexto atual.
+/// [mensagem]: texto a ser exibido.
+/// [background]: cor de fundo da notificação.
+/// [duracao]: tempo de exibição antes do fade-out.
 void mostrarNotificacao({
   required BuildContext context,
   required String mensagem,
@@ -7,6 +13,8 @@ void mostrarNotificacao({
   Duration duracao = const Duration(seconds: 2),
 }) {
   final overlay = Overlay.of(context);
+
+  // Cria a entry que será exibida por cima da interface.
   final overlayEntry = OverlayEntry(
     builder: (context) => _NotificacaoAnimada(
       mensagem: mensagem,
@@ -15,13 +23,16 @@ void mostrarNotificacao({
     ),
   );
 
+  // Insere a notificação na tela.
   overlay.insert(overlayEntry);
 
+  // Aguarda a duração + tempo de animação e remove do overlay.
   Future.delayed(duracao + const Duration(milliseconds: 400), () {
     overlayEntry.remove();
   });
 }
 
+/// Widget interno e animado que representa a notificação.
 class _NotificacaoAnimada extends StatefulWidget {
   final String mensagem;
   final Color background;
@@ -38,20 +49,20 @@ class _NotificacaoAnimada extends StatefulWidget {
 }
 
 class _NotificacaoAnimadaState extends State<_NotificacaoAnimada> {
-  double _opacity = 0.0;
+  double _opacity = 0.0; // Opacidade inicial (invisível)
 
   @override
   void initState() {
     super.initState();
 
-    // Fade in
+    // Animação de fade in logo após a construção do widget
     Future.delayed(Duration.zero, () {
       setState(() {
         _opacity = 1.0;
       });
     });
 
-    // Fade out
+    // Após a duração desejada, inicia o fade out
     Future.delayed(widget.duracao, () {
       setState(() {
         _opacity = 0.0;
@@ -61,6 +72,7 @@ class _NotificacaoAnimadaState extends State<_NotificacaoAnimada> {
 
   @override
   Widget build(BuildContext context) {
+    // Define a posição do topo levando em conta a status bar e AppBar
     final top = MediaQuery.of(context).padding.top + kToolbarHeight;
 
     return Positioned(
@@ -71,14 +83,13 @@ class _NotificacaoAnimadaState extends State<_NotificacaoAnimada> {
         color: Colors.transparent,
         child: AnimatedOpacity(
           opacity: _opacity,
-          duration: const Duration(milliseconds: 400),
+          duration: const Duration(milliseconds: 400), // Tempo de transição
           child: Container(
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: BoxDecoration(
               color: widget.background,
-              borderRadius: BorderRadius.zero,
-
+              borderRadius: BorderRadius.zero, // Pode ser personalizado futuramente
             ),
             child: Text(
               widget.mensagem,

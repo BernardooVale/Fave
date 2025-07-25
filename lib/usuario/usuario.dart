@@ -41,7 +41,6 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
   final Set<Item> selecionados = {};
   bool get selecionando => selecionados.isNotEmpty;
 
-  // Controlador de animação para fade da lista
   late final AnimationController _fadeController;
   late final Animation<double> _fadeAnimation;
 
@@ -106,7 +105,6 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
         _searchFocus.unfocus();
         _fadeController.forward();
       } else {
-        // Abrir teclado com delay
         Future.delayed(const Duration(milliseconds: 100),
                 () => FocusScope.of(context).requestFocus(_searchFocus));
       }
@@ -116,7 +114,6 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
   void _onFiltroChanged(String value) {
     setState(() {
       termoPesquisa = value.trim();
-      // Reiniciar animação para fade suave
       _fadeController.reset();
       _fadeController.forward();
     });

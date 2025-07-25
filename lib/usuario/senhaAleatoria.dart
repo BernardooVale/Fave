@@ -42,7 +42,6 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
     if (usarEspeciais) chars += especiais;
 
     if (chars.isEmpty) {
-      // Se nada selecionado, limpa a senha
       setState(() => senha = '');
       return;
     }
@@ -62,7 +61,7 @@ class _SenhaAleatoriaPopupState extends State<SenhaAleatoriaPopup> {
     final hasLower = senha.contains(RegExp(r'[a-z]'));
     final hasUpper = senha.contains(RegExp(r'[A-Z]'));
     final hasNumber = senha.contains(RegExp(r'[0-9]'));
-    final hasSpecial = senha.contains(RegExp(r'[!@#$%]')); // só esses caracteres especiais
+    final hasSpecial = senha.contains(RegExp(r'[!@#$%]'));
 
     if (lengthOk) forca += 0.2;
     if (hasLower) forca += 0.2;

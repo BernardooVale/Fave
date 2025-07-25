@@ -5,11 +5,19 @@ import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 
 import '../generated/l10n.dart';
-import '../ed.dart'; // Pasta e Senha
+import '../ed.dart';
 import '../cores.dart';
 import 'senhaAleatoria.dart';
 import 'fotoCriptografia.dart';
 
+/// Exibe um diálogo para o usuário escolher o que deseja criar: pasta, senha ou documento.
+/// Após a escolha, abre o respectivo formulário/modal para criar o item.
+///
+/// Parâmetros:
+/// - [context]: contexto do widget para exibir diálogos e modais.
+/// - [userBox]: caixa Hive que armazena os usuários e seus dados.
+/// - [target]: alvo onde o novo item será adicionado — pode ser um Usuario ou uma Pasta.
+/// - [onUpdate]: callback para atualizar a interface após criação.
 Future<void> showAddOptionDialog({
   required BuildContext context,
   required Box<Usuario> userBox,
@@ -17,9 +25,9 @@ Future<void> showAddOptionDialog({
   required VoidCallback onUpdate,
 }) async {
   final option = await showDialog<String>(
-    context: context,
+      context: context,
       builder: (context) {
-        final s = S.of(context);
+        final s = S.of(context); // Strings internacionalizadas
 
         return Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -33,45 +41,40 @@ Future<void> showAddOptionDialog({
               children: [
                 Text(
                   s.whatDoYouWantToCreateTitle,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
                 ),
                 const SizedBox(height: 12),
+
+                // Opção de criar pasta
                 ListTile(
                   leading: const Icon(Icons.folder_rounded, color: AppColors.pasta),
-                  title: Text(
-                    s.createFolderOption,
-                    style: const TextStyle(color: Colors.white),
-                  ),
+                  title: Text(s.createFolderOption, style: const TextStyle(color: Colors.white)),
                   onTap: () => Navigator.pop(context, 'pasta'),
                 ),
+
+                // Opção de criar senha
                 ListTile(
                   leading: const Icon(Icons.vpn_key_rounded, color: AppColors.primaria),
-                  title: Text(
-                    s.createPasswordOption,
-                    style: const TextStyle(color: Colors.white),
-                  ),
+                  title: Text(s.createPasswordOption, style: const TextStyle(color: Colors.white)),
                   onTap: () => Navigator.pop(context, 'senha'),
                 ),
+
+                // Opção de criar documento
                 ListTile(
                   leading: const Icon(Icons.description_rounded, color: AppColors.secundaria),
-                  title: Text(
-                    s.createDocumentOption,
-                    style: const TextStyle(color: Colors.white),
-                  ),
+                  title: Text(s.createDocumentOption, style: const TextStyle(color: Colors.white)),
                   onTap: () => Navigator.pop(context, 'documento'),
                 ),
+
                 const Divider(color: Colors.white24),
+
+                // Botão cancelar
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton.icon(
                     onPressed: () => Navigator.pop(context, null),
                     icon: const Icon(Icons.close_rounded, color: AppColors.terciaria),
-                    label: Text(
-                      s.cancelButtonText,
-                      style: const TextStyle(color: AppColors.terciaria),
-                    ),
+                    label: Text(s.cancelButtonText, style: const TextStyle(color: AppColors.terciaria)),
                   ),
                 ),
               ],
@@ -81,6 +84,7 @@ Future<void> showAddOptionDialog({
       }
   );
 
+  // Após a escolha, chama o respectivo formulário/modal de criação
   if (option == 'pasta') {
     await showCreateFolderSheet(
       context: context,
@@ -105,6 +109,8 @@ Future<void> showAddOptionDialog({
   }
 }
 
+/// Função que cria uma nova pasta e adiciona na lista correta do [target].
+/// Atualiza o armazenamento Hive e chama [onUpdate] para refletir mudanças na UI.
 Future<void> addFolder({
   required Box<Usuario> userBox,
   required dynamic target, // Usuario ou Pasta
@@ -128,11 +134,13 @@ Future<void> addFolder({
     throw Exception('target deve ser Usuario ou Pasta');
   }
 
-  // Atualiza no Hive
+  // Salva alteração no Hive (atualiza primeiro usuário)
   await userBox.putAt(0, userBox.values.first);
   onUpdate();
 }
 
+/// Função que cria uma nova senha e adiciona na lista correta do [target].
+/// Atualiza o armazenamento Hive e chama [onUpdate] para refletir mudanças na UI.
 Future<void> addPassword({
   required Box<Usuario> userBox,
   required dynamic target, // Usuario ou Pasta
@@ -156,11 +164,12 @@ Future<void> addPassword({
     throw Exception('target deve ser Usuario ou Pasta');
   }
 
-  // Atualiza no Hive
   await userBox.putAt(0, userBox.values.first);
   onUpdate();
 }
 
+/// Função que cria um novo documento e adiciona na lista correta do [target].
+/// Atualiza o armazenamento Hive e chama [onUpdate] para refletir mudanças na UI.
 Future<void> addDocument({
   required Box<Usuario> userBox,
   required dynamic target,
@@ -194,6 +203,19 @@ Future<void> addDocument({
   onUpdate();
 }
 
+/// Exibe um modal bottom sheet para o usuário criar uma nova pasta.
+///
+/// Parâmetros:
+/// - [context]: contexto do widget para exibir o modal.
+/// - [userBox]: caixa Hive para armazenar e atualizar o usuário.
+/// - [target]: alvo onde a pasta será adicionada (pode ser Usuario ou Pasta).
+/// - [onUpdate]: callback para atualizar a UI após criação.
+///
+/// Funcionalidade:
+/// - Mostra um TextField para o nome da pasta.
+/// - Valida se o nome não está vazio; caso contrário, mostra notificação.
+/// - Ao salvar, chama a função addFolder para adicionar a pasta e atualiza a UI.
+/// - Fecha o modal após salvar.
 Future<void> showCreateFolderSheet({
   required BuildContext context,
   required Box<Usuario> userBox,
@@ -203,20 +225,21 @@ Future<void> showCreateFolderSheet({
   final nomeController = TextEditingController();
 
   await showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: AppColors.fundo,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-    ),
+      context: context,
+      isScrollControlled: true, // para modal usar toda altura necessária
+      backgroundColor: AppColors.fundo,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (context) {
         final s = S.of(context);
+
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => FocusScope.of(context).unfocus(),
+          onTap: () => FocusScope.of(context).unfocus(), // fecha teclado ao clicar fora
           child: Padding(
             padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20, // evita teclado sobre texto
               left: 24,
               right: 24,
               top: 24,
@@ -233,6 +256,8 @@ Future<void> showCreateFolderSheet({
                   ),
                 ),
                 const SizedBox(height: 20),
+
+                // Campo para nome da pasta
                 TextField(
                   controller: nomeController,
                   style: const TextStyle(color: Colors.white),
@@ -252,6 +277,8 @@ Future<void> showCreateFolderSheet({
                   ),
                 ),
                 const SizedBox(height: 28),
+
+                // Botão salvar
                 Align(
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
@@ -277,7 +304,7 @@ Future<void> showCreateFolderSheet({
                           mensagem: s.writeANameNotification,
                           background: AppColors.terciaria,
                         );
-                        return;
+                        return; // não prossegue se nome vazio
                       }
 
                       mostrarNotificacao(
@@ -286,13 +313,14 @@ Future<void> showCreateFolderSheet({
                         background: AppColors.secundaria,
                       );
 
+                      // Adiciona a nova pasta e atualiza UI
                       await addFolder(
                         userBox: userBox,
                         target: target,
                         nome: nome,
                         onUpdate: onUpdate,
                       );
-                      Navigator.pop(context);
+                      Navigator.pop(context); // fecha modal
                     },
                   ),
                 ),
@@ -305,6 +333,21 @@ Future<void> showCreateFolderSheet({
   );
 }
 
+/// Exibe um modal bottom sheet para criar uma nova senha com validação e força de senha.
+///
+/// Parâmetros:
+/// - [context], [userBox], [target], [onUpdate]: como em showCreateFolderSheet.
+///
+/// Funcionalidades adicionais:
+/// - Calcula a força da senha baseada em critérios (tamanho, caracteres especiais, etc).
+/// - Exibe uma barra de força de senha com gradiente colorido.
+/// - Permite gerar senha aleatória via popup.
+/// - Valida nome e senha não vazios antes de salvar.
+/// - Notifica o usuário ao salvar com sucesso.
+///
+/// Detalhes importantes:
+/// - Usa StatefulBuilder para controlar estado interno (força da senha) dentro do modal.
+/// - Atualiza a barra toda vez que o usuário altera a senha.
 Future<void> showCreatePasswordSheet({
   required BuildContext context,
   required Box<Usuario> userBox,
@@ -314,6 +357,7 @@ Future<void> showCreatePasswordSheet({
   final nomeController = TextEditingController();
   final senhaController = TextEditingController();
 
+  // Função para calcular força da senha (0 a 1)
   double calcularForcaSenha(String senha) {
     double forca = 0;
 
@@ -332,8 +376,8 @@ Future<void> showCreatePasswordSheet({
     return forca.clamp(0, 1);
   }
 
+  // Widget que mostra barra de força da senha com gradiente de cores
   Widget barraForcaSenha(double forca) {
-    // Cores do gradiente: vermelho (fraco) para verde (forte)
     final List<Color> cores = [
       Colors.red,
       Colors.orange,
@@ -342,11 +386,9 @@ Future<void> showCreatePasswordSheet({
       Colors.green,
     ];
 
-    // Índice do gradiente conforme força (0 a 4)
     int idx = (forca * (cores.length - 1)).floor();
     int idxNext = (idx + 1).clamp(0, cores.length - 1);
 
-    // Cor interpolada
     final color = Color.lerp(cores[idx], cores[idxNext], forca * (cores.length - 1) - idx);
 
     return Container(
@@ -357,7 +399,7 @@ Future<void> showCreatePasswordSheet({
       ),
       child: FractionallySizedBox(
         alignment: Alignment.centerLeft,
-        widthFactor: forca, // de 0 a 1
+        widthFactor: forca, // percentual da barra preenchida
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
@@ -382,7 +424,7 @@ Future<void> showCreatePasswordSheet({
       return StatefulBuilder(
         builder: (context, setState) => GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => FocusScope.of(context).unfocus(),
+          onTap: () => FocusScope.of(context).unfocus(), // fecha teclado ao clicar fora
           child: Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom + 20,
@@ -402,6 +444,8 @@ Future<void> showCreatePasswordSheet({
                   ),
                 ),
                 const SizedBox(height: 20),
+
+                // Campo nome da senha
                 TextField(
                   controller: nomeController,
                   style: const TextStyle(color: Colors.white),
@@ -421,6 +465,8 @@ Future<void> showCreatePasswordSheet({
                   ),
                 ),
                 const SizedBox(height: 16),
+
+                // Campo senha com obscureText
                 TextField(
                   controller: senhaController,
                   obscureText: true,
@@ -446,10 +492,14 @@ Future<void> showCreatePasswordSheet({
                   },
                 ),
                 const SizedBox(height: 8),
+
+                // Barra visual da força da senha
                 barraForcaSenha(forcaSenha),
                 const SizedBox(height: 28),
+
                 Row(
                   children: [
+                    // Botão para gerar senha aleatória
                     InkWell(
                       onTap: () async {
                         await showModalBottomSheet(
@@ -461,7 +511,6 @@ Future<void> showCreatePasswordSheet({
                           ),
                           builder: (context) => SenhaAleatoriaPopup(
                             onSenhaGerada: (senha) {
-                              // Aqui você recebe a senha gerada e preenche o campo
                               senhaController.text = senha;
                             },
                           ),
@@ -475,7 +524,10 @@ Future<void> showCreatePasswordSheet({
                         ),
                       ),
                     ),
+
                     const Spacer(),
+
+                    // Botão salvar
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.secundaria,
@@ -494,6 +546,7 @@ Future<void> showCreatePasswordSheet({
                         final nome = nomeController.text.trim();
                         final senha = senhaController.text.trim();
 
+                        // Valida nome
                         if (nome.isEmpty) {
                           mostrarNotificacao(
                               context: context,
@@ -503,6 +556,7 @@ Future<void> showCreatePasswordSheet({
                           return;
                         }
 
+                        // Valida senha
                         if (senha.isEmpty) {
                           mostrarNotificacao(
                               context: context,
@@ -518,6 +572,7 @@ Future<void> showCreatePasswordSheet({
                             background: AppColors.secundaria
                         );
 
+                        // Adiciona senha e atualiza UI
                         await addPassword(
                           userBox: userBox,
                           target: target,
@@ -526,7 +581,7 @@ Future<void> showCreatePasswordSheet({
                           onUpdate: onUpdate,
                         );
 
-                        Navigator.pop(context);
+                        Navigator.pop(context); // fecha modal
                       },
                     ),
                   ],

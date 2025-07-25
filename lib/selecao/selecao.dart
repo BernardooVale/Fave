@@ -9,25 +9,27 @@ import '../cores.dart';
 import '../config.dart';
 import '../generated/l10n.dart';
 
+/// Tela de seleção de perfis de usuário.
+/// Permite buscar, criar, selecionar e excluir perfis.
 class Selecao extends StatefulWidget {
   const Selecao({super.key});
+
   @override
   State<Selecao> createState() => _SelecaoState();
 }
 
 class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
-  late Box<Usuario> usuariosBox;
-  bool loading = true;
-  String filtro = '';
-  bool mostrandoBusca = false;
+  late Box<Usuario> usuariosBox; // Caixa Hive com os perfis
+  bool loading = true; // Se ainda está carregando os dados
+  String filtro = ''; // Texto do campo de busca
+  bool mostrandoBusca = false; // Controla visibilidade do campo de busca
 
   final TextEditingController _buscaCtrl = TextEditingController();
   final FocusNode _buscaFocus = FocusNode();
 
-  final Set<int> selecionados = {};
+  final Set<int> selecionados = {}; // Índices dos perfis selecionados
   bool get selecionando => selecionados.isNotEmpty;
 
-  // Para animar opacidade da lista
   late final AnimationController _fadeController;
   late final Animation<double> _fadeAnimation;
 
@@ -35,6 +37,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    // Controlador de animação de fade
     _fadeController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -42,10 +45,11 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
 
     _fadeAnimation = CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut);
 
-    _init();
+    _init(); // Inicializa Hive
     _fadeController.forward();
   }
 
+  /// Inicializa o Hive e abre/adapta as caixas necessárias
   Future<void> _init() async {
     await Hive.initFlutter();
     Hive.registerAdapter(UsuarioAdapter());
@@ -57,15 +61,14 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
     setState(() => loading = false);
   }
 
+  /// Mostra confirmação de exclusão de perfis selecionados
   Future<void> _confirmarExcluir() async {
     final s = S.of(context);
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
         title: Text(s.excluirPerfil),
-        content: Text(
-          s.deleteProfilesConfirm(selecionados.length)
-        ),
+        content: Text(s.deleteProfilesConfirm(selecionados.length)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -79,6 +82,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
       ),
     );
 
+    // Remove os perfis em ordem reversa
     if (confirmar == true) {
       final idsOrdenados = selecionados.toList()..sort((a, b) => b.compareTo(a));
       for (final idx in idsOrdenados) {
@@ -88,6 +92,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
     }
   }
 
+  /// Alterna entre mostrar ou ocultar o campo de busca
   void _toggleBusca() {
     setState(() {
       mostrandoBusca = !mostrandoBusca;
@@ -97,33 +102,36 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
         _buscaFocus.unfocus();
         _fadeController.forward();
       } else {
-        // Abre teclado e foca campo após pequeno delay
-        Future.delayed(const Duration(milliseconds: 100),
-                () => FocusScope.of(context).requestFocus(_buscaFocus));
+        // Foca no campo de texto após pequeno atraso
+        Future.delayed(
+          const Duration(milliseconds: 100),
+              () => FocusScope.of(context).requestFocus(_buscaFocus),
+        );
       }
     });
   }
 
+  /// Atualiza o texto de filtro e reinicia a animação
   void _onFiltroChanged(String value) {
     setState(() {
       filtro = value.trim();
-      // Reinicia animação para fade suave
       _fadeController.reset();
       _fadeController.forward();
     });
   }
 
+  /// Abre a página de configurações
   Future<void> _abrirConfiguracoes() async {
     await Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => const ConfigPage(), // ✅ NOVO PUSH PARA CONFIG
+      builder: (_) => const ConfigPage(),
     ));
-    setState(() {}); // Refrescar a tela se necessário
+    setState(() {}); // Atualiza a tela ao voltar
   }
 
   @override
   Widget build(BuildContext context) {
-    final s = S.of(context);
-    final cs = Theme.of(context).colorScheme;
+    final s = S.of(context); // Traduções
+    final cs = Theme.of(context).colorScheme; // Cores do tema
 
     if (loading) {
       return const Scaffold(
@@ -131,6 +139,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
       );
     }
 
+    // Lista de perfis filtrados pelo nome
     final usuariosFiltrados = List.generate(
       usuariosBox.length,
           (i) => MapEntry(i, usuariosBox.getAt(i)!),
@@ -144,8 +153,8 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
         elevation: 2,
         centerTitle: true,
         title: selecionando
-            ? Text(s.selectedItemsCount(selecionados.length))
-            : Text(s.perfis, style: TextStyle(fontWeight: FontWeight.bold)),
+            ? Text(s.selectedItemsCount(selecionados.length)) // Quantidade de selecionados
+            : Text(s.perfis, style: const TextStyle(fontWeight: FontWeight.bold)),
         leading: selecionando
             ? IconButton(
           icon: const Icon(Icons.close_rounded),
@@ -154,23 +163,18 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
             : null,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings_rounded), // ⚙️
+            icon: const Icon(Icons.settings_rounded),
             tooltip: s.config,
             onPressed: _abrirConfiguracoes,
           ),
         ],
       ),
-      body: loading
-          ? const Center(child: CircularProgressIndicator())
-          : usuariosBox.isEmpty
-          ? Center(
-        child: Text(
-          s.semPerfis,
-          style: const TextStyle(fontSize: 16),
-        ),
-      )
+
+      body: usuariosBox.isEmpty
+          ? Center(child: Text(s.semPerfis, style: const TextStyle(fontSize: 16)))
           : Column(
         children: [
+          // Campo de busca (com transição fade)
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             transitionBuilder: (child, animation) =>
@@ -187,8 +191,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
                 decoration: InputDecoration(
                   hintText: s.buscarPerfil,
                   hintStyle: const TextStyle(color: Colors.white70),
-                  prefixIcon:
-                  const Icon(Icons.search_rounded, color: AppColors.primaria),
+                  prefixIcon: const Icon(Icons.search_rounded, color: AppColors.primaria),
                   suffixIcon: filtro.isNotEmpty
                       ? IconButton(
                     icon: const Icon(Icons.close_rounded, color: Colors.white70),
@@ -207,10 +210,10 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
                 ),
               ),
             )
-                : const SizedBox.shrink(
-              key: ValueKey('empty'),
-            ),
+                : const SizedBox.shrink(key: ValueKey('empty')),
           ),
+
+          // Lista de perfis
           Expanded(
             child: FadeTransition(
               opacity: _fadeAnimation,
@@ -224,8 +227,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
                   final estaSelecionado = selecionados.contains(idx);
 
                   return Padding(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     child: Card(
                       elevation: estaSelecionado ? 6 : 2,
                       color: AppColors.mel.withOpacity(0.3),
@@ -259,8 +261,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
                           }
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20),
+                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                           child: Row(
                             children: [
                               Icon(Icons.person_rounded, color: cs.onPrimary),
@@ -290,11 +291,14 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
           ),
         ],
       ),
+
+      // Botões flutuantes: busca e ação principal (adicionar ou excluir)
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 4, right: 4, left: 36),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Botão de busca
             FloatingActionButton.extended(
               heroTag: 'buscar',
               onPressed: _toggleBusca,
@@ -307,6 +311,7 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
               foregroundColor: AppColors.fundo,
             ),
             const SizedBox(width: 12),
+            // Botão de adicionar/excluir
             FloatingActionButton.extended(
               heroTag: 'principal',
               onPressed: selecionando
@@ -318,11 +323,17 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
               ),
               backgroundColor: selecionando ? AppColors.terciaria : cs.secondary,
               foregroundColor: cs.onSecondary,
-              icon: Icon(selecionando ? Icons.delete_rounded : Icons.add_rounded, size: 28),
+              icon: Icon(
+                selecionando ? Icons.delete_rounded : Icons.add_rounded,
+                size: 28,
+              ),
               label: Text(
                 selecionando ? s.apagar : s.novoPerfil,
                 style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.fundo),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.fundo,
+                ),
               ),
             ),
           ],
