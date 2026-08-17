@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../cores.dart';
 import '../ed.dart';
 import '../cofre.dart';
 import '../itens/item.dart';
@@ -26,7 +27,7 @@ Future<void> deletarSelecionadosGenerico({
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text(s.excluir, style: const TextStyle(color: Colors.red)),
+              child: Text(s.excluir, style: TextStyle(color: AppColors.terciaria)),
             ),
           ],
         );

@@ -45,13 +45,13 @@ Future<void> showAddOptionDialog({
                 ),
 
                 ListTile(
-                  leading: const Icon(Icons.vpn_key_rounded, color: AppColors.primaria),
+                  leading: const Icon(Icons.vpn_key_rounded, color: AppColors.azulejo),
                   title: Text(s.createPasswordOption, style: const TextStyle(color: Colors.white)),
                   onTap: () => Navigator.pop(context, 'senha'),
                 ),
 
                 ListTile(
-                  leading: const Icon(Icons.description_rounded, color: AppColors.secundaria),
+                  leading: const Icon(Icons.description_rounded, color: AppColors.botanical),
                   title: Text(s.createDocumentOption, style: const TextStyle(color: Colors.white)),
                   onTap: () => Navigator.pop(context, 'documento'),
                 ),
@@ -206,7 +206,7 @@ Future<void> showCreateFolderSheet({
                     labelText: s.folderNameLabel,
                     labelStyle: const TextStyle(color: Colors.white70),
                     filled: true,
-                    fillColor: AppColors.pasta.withOpacity(0.1),
+                    fillColor: AppColors.pasta.withOpacity(0.15),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -223,13 +223,13 @@ Future<void> showCreateFolderSheet({
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.secundaria,
+                      backgroundColor: AppColors.pasta,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                       elevation: 4,
-                      shadowColor: AppColors.secundaria.withOpacity(0.6),
+                      shadowColor: AppColors.pasta.withOpacity(0.6),
                     ),
                     child: Text(
                       s.saveButtonText,
@@ -250,7 +250,7 @@ Future<void> showCreateFolderSheet({
                       mostrarNotificacao(
                         context: context,
                         mensagem: s.folderCreatedNotification,
-                        background: AppColors.secundaria,
+                        background: AppColors.pasta,
                       );
 
                       await addFolder(
@@ -350,8 +350,12 @@ Future<void> showCreatePasswordSheet({
                     labelText: s.passwordNameLabel,
                     labelStyle: TextStyle(color: Colors.white70),
                     filled: true,
-                    fillColor: AppColors.primaria.withOpacity(0.1),
+                    fillColor: AppColors.azulejo.withOpacity(0.15),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppColors.azulejo, width: 2),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -364,8 +368,12 @@ Future<void> showCreatePasswordSheet({
                     labelText: s.passwordLabel,
                     labelStyle: TextStyle(color: Colors.white70),
                     filled: true,
-                    fillColor: AppColors.primaria.withOpacity(0.1),
+                    fillColor: AppColors.azulejo.withOpacity(0.15),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppColors.azulejo, width: 2),
+                    ),
                   ),
                   onChanged: (senha) {
                     setState(() {
@@ -396,7 +404,7 @@ Future<void> showCreatePasswordSheet({
                       },
                       child: Text(
                         s.randomPasswordText,
-                        style: TextStyle(color: AppColors.mel, fontWeight: FontWeight.w600),
+                        style: TextStyle(color: AppColors.azulejo, fontWeight: FontWeight.w600),
                       ),
                     ),
 
@@ -404,7 +412,7 @@ Future<void> showCreatePasswordSheet({
 
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.secundaria,
+                        backgroundColor: AppColors.azulejo,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                       ),
@@ -425,7 +433,7 @@ Future<void> showCreatePasswordSheet({
                           return;
                         }
 
-                        mostrarNotificacao(context: context, mensagem: s.passwordRegisteredNotification, background: AppColors.secundaria);
+                        mostrarNotificacao(context: context, mensagem: s.passwordRegisteredNotification, background: AppColors.azulejo);
 
                         await addPassword(
                           cofre: cofre,
@@ -585,8 +593,12 @@ Future<void> showCreateDocumentSheet({
                     labelText: s.documentNameLabel,
                     labelStyle: const TextStyle(color: Colors.white70),
                     filled: true,
-                    fillColor: AppColors.secundaria.withOpacity(0.1),
+                    fillColor: AppColors.botanical.withOpacity(0.15),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppColors.botanical, width: 2),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -597,8 +609,12 @@ Future<void> showCreateDocumentSheet({
                     labelText: s.documentNumberLabel,
                     labelStyle: const TextStyle(color: Colors.white70),
                     filled: true,
-                    fillColor: AppColors.secundaria.withOpacity(0.1),
+                    fillColor: AppColors.botanical.withOpacity(0.15),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppColors.botanical, width: 2),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -609,8 +625,12 @@ Future<void> showCreateDocumentSheet({
                     labelText: s.issuingBodyLabel,
                     labelStyle: const TextStyle(color: Colors.white70),
                     filled: true,
-                    fillColor: AppColors.secundaria.withOpacity(0.1),
+                    fillColor: AppColors.botanical.withOpacity(0.15),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppColors.botanical, width: 2),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -621,7 +641,7 @@ Future<void> showCreateDocumentSheet({
                         final picked = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(1900), lastDate: DateTime(2100));
                         if (picked != null) setState(() => dataEmissao = picked);
                       },
-                      child: Text(dataEmissao != null ? s.dateDisplay(dataEmissao!) : s.issueDateLabel, style: TextStyle(color: dataEmissao != null ? Colors.white : AppColors.primaria)),
+                      child: Text(dataEmissao != null ? s.dateDisplay(dataEmissao!) : s.issueDateLabel, style: TextStyle(color: dataEmissao != null ? Colors.white : AppColors.botanical)),
                     ),
                     const Spacer(),
                     TextButton(
@@ -629,7 +649,7 @@ Future<void> showCreateDocumentSheet({
                         final picked = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(1900), lastDate: DateTime(2100));
                         if (picked != null) setState(() => dataVencimento = picked);
                       },
-                      child: Text(dataVencimento != null ? s.dateDisplay(dataVencimento!) : s.expirationDateLabel, style: TextStyle(color: dataVencimento != null ? Colors.white : AppColors.primaria)),
+                      child: Text(dataVencimento != null ? s.dateDisplay(dataVencimento!) : s.expirationDateLabel, style: TextStyle(color: dataVencimento != null ? Colors.white : AppColors.botanical)),
                     ),
                   ],
                 ),
@@ -667,7 +687,7 @@ Future<void> showCreateDocumentSheet({
                 Align(
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.secundaria, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14)),
+                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.botanical, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14)),
                     child: Text(s.saveButtonText, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                     onPressed: () async {
                       final nome = nomeController.text.trim();

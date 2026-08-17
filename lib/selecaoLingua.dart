@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'cores.dart';
 import 'main.dart';
+import 'widgets/motifs.dart';
+import 'widgets/arched_container.dart';
 
 class SelecaoLingua extends StatelessWidget {
   const SelecaoLingua({super.key});
@@ -21,15 +23,18 @@ class SelecaoLingua extends StatelessWidget {
     required String code,
     required String label,
   }) {
-    return Card(
-      color: AppColors.mel.withOpacity(0.85),
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return ArchedContainer(
+      archRadius: 20,
+      decoration: BoxDecoration(
+        color: AppColors.wood.withOpacity(0.5),
+        border: Border.all(color: AppColors.brass.withOpacity(0.2)),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
       child: ListTile(
-        title: Text(label, style: const TextStyle(fontSize: 18)),
+        title: Text(label, style: const TextStyle(fontSize: 18, color: AppColors.ivory, fontFamily: 'serif')),
         onTap: () => _selectLanguage(context, code),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.mel),
       ),
     );
   }
@@ -38,82 +43,58 @@ class SelecaoLingua extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.fundo,
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 72),
-              _buildLanguageTile(
-                context: context,
-                code: 'pt',
-                label: 'Português',
+      body: Stack(
+        children: [
+          Positioned.fill(child: CustomPaint(painter: AzulejoPatternPainter(opacity: 0.02))),
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  Icon(Icons.translate_rounded, size: 64, color: AppColors.mel),
+                  const SizedBox(height: 16),
+                  const Text('Select Language', style: TextStyle(fontFamily: 'serif', fontSize: 24, color: AppColors.mel, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 32),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: [
+                        _buildLanguageTile(context: context, code: 'pt', label: 'Português'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'en', label: 'English'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'es', label: 'Español'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'fr', label: 'Français'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'ar', label: 'العربية'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'el', label: 'Ελληνικά'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'it', label: 'Italiano'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'de', label: 'Deutsch'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'ko', label: '한국어'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'ja', label: '日本語'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'zh', label: '简体中文'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'hi', label: 'हिन्दी'),
+                        const SizedBox(height: 12),
+                        _buildLanguageTile(context: context, code: 'ru', label: 'Русский'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 36)
+                ],
               ),
-              _buildLanguageTile(
-                context: context,
-                code: 'en',
-                label: 'English',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'es',
-                label: 'Español',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'fr',
-                label: 'Français',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'ar',
-                label: 'العربية',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'el',
-                label: 'Ελληνικά',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'it',
-                label: 'Italiano',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'de',
-                label: 'Deutsch',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'ko',
-                label: '한국어',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'ja',
-                label: '日本語',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'zh',
-                label: '简体中文',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'hi',
-                label: 'हिन्दी',
-              ),
-              _buildLanguageTile(
-                context: context,
-                code: 'ru',
-                label: 'Русский',
-              ),
-              SizedBox(height: 36)
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

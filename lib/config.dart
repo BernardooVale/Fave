@@ -39,7 +39,7 @@ class _ConfigPageState extends State<ConfigPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(loc.config),
+        title: Text(loc.config, style: TextStyle(color: AppColors.fundo),),
         centerTitle: true,
         backgroundColor: AppColors.mel,
         foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,

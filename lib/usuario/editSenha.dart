@@ -73,7 +73,7 @@ Future<void> showEditarSenhaDialog({
                     child: Text(
                       s.randomPasswordText,
                       style: TextStyle(
-                        color: AppColors.mel,
+                        color: AppColors.azulejo,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -104,7 +104,7 @@ Future<void> showEditarSenhaDialog({
                     Expanded(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.secundaria,
+                          backgroundColor: AppColors.azulejo,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         onPressed: () {

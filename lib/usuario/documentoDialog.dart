@@ -234,7 +234,7 @@ Widget info(String label, String valor) {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: AppColors.secundaria.withOpacity(0.15),
+          color: AppColors.botanical.withOpacity(0.2),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(

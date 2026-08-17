@@ -14,6 +14,8 @@ import 'filtro.dart';
 import 'deletarItens.dart';
 import 'editSenha.dart';
 import '../generated/l10n.dart';
+import '../widgets/motifs.dart';
+import '../widgets/arched_container.dart';
 
 class PastaPage extends StatefulWidget {
   final Pasta pasta;
@@ -152,284 +154,248 @@ class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMix
     });
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: selecionando
             ? Text(s.selectedItemsCount(selecionados.length))
-            : Text(pasta.nome, style: const TextStyle(fontWeight: FontWeight.bold)),
+            : Text(pasta.nome, style: const TextStyle(fontFamily: 'serif', fontWeight: FontWeight.bold)),
         leading: selecionando
             ? IconButton(icon: const Icon(Icons.close_rounded), onPressed: _cancelarSelecao)
             : null,
         actions: [
           if (!selecionando)
             IconButton(
-              icon: Icon(isVisible ? Icons.visibility_rounded : Icons.visibility_off_rounded),
+              icon: Icon(isVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: AppColors.brass),
               tooltip: isVisible ? s.hidePasswordsTooltip : s.showPasswordsTooltip,
               onPressed: () => setState(() => isVisible = !isVisible),
             ),
         ],
-        backgroundColor: AppColors.mel,
-        elevation: 2,
-        bottom: null,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
 
-      body: Column(
+      body: Stack(
         children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, animation) =>
-                FadeTransition(opacity: animation, child: child),
-            child: mostrandoBusca
-                ? Padding(
-              key: const ValueKey('buscaCampo'),
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: TextField(
-                controller: _searchController,
-                focusNode: _searchFocus,
-                autofocus: true,
-                onChanged: _onFiltroChanged,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: s.searchHintText,
-                  hintStyle: const TextStyle(color: Colors.white70),
-                  prefixIcon: const Icon(Icons.search_rounded, color: AppColors.primaria),
-                  suffixIcon: termoPesquisa.isNotEmpty
-                      ? IconButton(
-                    icon: const Icon(Icons.close_rounded, color: Colors.white70),
-                    onPressed: () {
-                      _searchController.clear();
-                      _onFiltroChanged('');
+          Positioned.fill(
+            child: CustomPaint(painter: AzulejoPatternPainter(opacity: 0.02)),
+          ),
+          Column(
+            children: [
+              const SizedBox(height: kToolbarHeight + 40),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: mostrandoBusca
+                    ? Padding(
+                  key: const ValueKey('buscaCampo'),
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                  child: TextField(
+                    controller: _searchController,
+                    focusNode: _searchFocus,
+                    onChanged: _onFiltroChanged,
+                    style: const TextStyle(color: AppColors.ivory),
+                    decoration: InputDecoration(
+                      hintText: s.searchHintText,
+                      hintStyle: const TextStyle(color: Colors.white38),
+                      prefixIcon: const Icon(Icons.search_rounded, color: AppColors.brass),
+                      filled: true,
+                      fillColor: AppColors.wood.withOpacity(0.3),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(color: AppColors.brass),
+                      ),
+                    ),
+                  ),
+                )
+                    : const SizedBox.shrink(),
+              ),
+              Expanded(
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: itensFiltrados.isEmpty
+                    ? Center(
+                      child: Text(
+                        s.noItemsToShow,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.brass.withOpacity(0.5)),
+                      ),
+                    )
+                    : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    controller: _scrollController,
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
+                    reverse: true,
+                    itemCount: itensFiltrados.length,
+                    itemBuilder: (context, index) {
+                      final item = itensFiltrados[index];
+                      final selecionado = selecionados.contains(item);
+
+                      Color itemColor;
+                      IconData itemIcon;
+                      switch (item.tipo) {
+                        case 'pasta':
+                          itemColor = AppColors.terracotta;
+                          itemIcon = Icons.folder_open_rounded;
+                          break;
+                        case 'documento':
+                          itemColor = AppColors.botanical;
+                          itemIcon = Icons.description_outlined;
+                          break;
+                        default:
+                          itemColor = AppColors.azulejo;
+                          itemIcon = Icons.key_outlined;
+                      }
+
+                      Future<void> toggleFavorito() async {
+                        if (item.tipo == 'pasta') {
+                          item.pasta!.favorito = !item.pasta!.favorito;
+                          await widget.cofre.pastas.put(item.pasta!.id, item.pasta!);
+                        } else if (item.tipo == 'senha') {
+                          item.senha!.favorito = !item.senha!.favorito;
+                          await widget.cofre.senhas.put(item.senha!.id, item.senha!);
+                        } else if (item.tipo == 'documento') {
+                          item.documento!.favorito = !item.documento!.favorito;
+                          await widget.cofre.documentos.put(item.documento!.id, item.documento!);
+                        }
+                        setState(() {});
+                      }
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: ArchedContainer(
+                          archRadius: 24,
+                          decoration: BoxDecoration(
+                            color: selecionado ? AppColors.brass.withOpacity(0.15) : itemColor.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: selecionado ? AppColors.brass : itemColor.withOpacity(0.3),
+                              width: selecionado ? 2 : 1,
+                            ),
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onLongPress: () {
+                                setState(() {
+                                  selecionando = true;
+                                  selecionados.add(item);
+                                });
+                              },
+                              onTap: selecionando
+                                  ? () => _toggleSelecionado(item)
+                                  : () async {
+                                if (item.tipo == 'pasta') {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => PastaPage(
+                                        pasta: item.pasta!,
+                                        cofre: widget.cofre,
+                                        isVisibleIni: isVisible,
+                                      ),
+                                    ),
+                                  );
+                                } else if (item.tipo == 'senha') {
+                                  await showEditarSenhaDialog(
+                                    context: context,
+                                    nomeInicial: item.nome,
+                                    senhaInicial: item.senha!.senha,
+                                    onConfirmar: (novoNome, novaSenha) async {
+                                      item.senha!.nome = novoNome;
+                                      item.senha!.senha = novaSenha;
+                                      item.senha!.ultimaModificacao = DateTime.now();
+                                      await widget.cofre.senhas.put(item.senha!.id, item.senha!);
+                                      setState(() {});
+                                    },
+                                  );
+                                } else if (item.tipo == 'documento') {
+                                  documentoDialog(context, item.documento!, widget.cofre);
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: itemColor.withOpacity(0.1),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(itemIcon, color: itemColor, size: 24),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item.nome,
+                                            style: const TextStyle(
+                                              color: AppColors.ivory,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 4),
+                                          if (item.tipo == 'senha' || item.tipo == 'documento')
+                                            Text(
+                                              isVisible 
+                                                ? (item.tipo == 'senha' ? item.senha!.senha : item.documento!.numero)
+                                                : '••••••••',
+                                              style: TextStyle(
+                                                color: AppColors.ivory.withOpacity(0.5),
+                                                letterSpacing: isVisible ? 1 : 3,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        item.favorito ? Icons.star_rounded : Icons.star_outline_rounded,
+                                        color: item.favorito ? AppColors.brass : Colors.grey,
+                                      ),
+                                      onPressed: toggleFavorito,
+                                    ),
+                                    if (item.tipo != 'pasta')
+                                      IconButton(
+                                        icon: const Icon(Icons.copy_rounded, color: Colors.grey, size: 20),
+                                        onPressed: () {
+                                          final val = item.tipo == 'senha' ? item.senha!.senha : item.documento!.numero;
+                                          Clipboard.setData(ClipboardData(text: val));
+                                          mostrarNotificacao(
+                                              context: context,
+                                              mensagem: item.tipo == 'senha' ? s.passwordCopiedNotification : s.documentNumberCopiedNotification,
+                                              background: AppColors.brass.withOpacity(0.8)
+                                          );
+                                        }
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
                     },
-                  )
-                      : null,
-                  filled: true,
-                  fillColor: Colors.white10,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-            )
-                : const SizedBox.shrink(key: ValueKey('empty')),
+            ],
           ),
-          Expanded(
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: itensFiltrados.isEmpty
-                ? Center(
-                  child: Text(
-                    s.noItemsToShow,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                )
-                : ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                controller: _scrollController,
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-                reverse: true,
-                itemCount: itensFiltrados.length,
-                itemBuilder: (context, index) {
-                  final item = itensFiltrados[index];
-                  final selecionado = selecionados.contains(item);
-
-                  Future<void> toggleFavorito() async {
-                    if (item.tipo == 'pasta') {
-                      item.pasta!.favorito = !item.pasta!.favorito;
-                      await widget.cofre.pastas.put(item.pasta!.id, item.pasta!);
-                    } else if (item.tipo == 'senha') {
-                      item.senha!.favorito = !item.senha!.favorito;
-                      await widget.cofre.senhas.put(item.senha!.id, item.senha!);
-                    } else if (item.tipo == 'documento') {
-                      item.documento!.favorito = !item.documento!.favorito;
-                      await widget.cofre.documentos.put(item.documento!.id, item.documento!);
-                    }
-                    setState(() {});
-                  }
-
-                  return Card(
-                    elevation: selecionado ? 6 : 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      side: selecionado
-                          ? BorderSide(color: AppColors.terciaria, width: 2)
-                          : BorderSide.none,
-                    ),
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    color: item.tipo == 'pasta'
-                        ? AppColors.pasta.withOpacity(0.2)
-                        : item.tipo == 'documento'
-                        ? AppColors.doc.withOpacity(0.2)
-                        : AppColors.primaria.withOpacity(0.2),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(16),
-                      onLongPress: () {
-                        setState(() {
-                          selecionando = true;
-                          selecionados.add(item);
-                        });
-                      },
-                      onTap: selecionando
-                          ? () => _toggleSelecionado(item)
-                          : () async {
-                        if (item.tipo == 'pasta') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => PastaPage(
-                                pasta: item.pasta!,
-                                cofre: widget.cofre,
-                                isVisibleIni: isVisible,
-                              ),
-                            ),
-                          );
-                        } else if (item.tipo == 'senha') {
-                          await showEditarSenhaDialog(
-                            context: context,
-                            nomeInicial: item.nome,
-                            senhaInicial: item.senha!.senha,
-                            onConfirmar: (novoNome, novaSenha) async {
-                              item.senha!.nome = novoNome;
-                              item.senha!.senha = novaSenha;
-                              item.senha!.ultimaModificacao = DateTime.now();
-                              await widget.cofre.senhas.put(item.senha!.id, item.senha!);
-                              setState(() {});
-                            },
-                          );
-                        } else if (item.tipo == 'documento') {
-                          documentoDialog(context, item.documento!, widget.cofre);
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              item.tipo == 'pasta'
-                                  ? Icons.folder_rounded
-                                  : item.tipo == 'documento'
-                                  ? Icons.description_rounded
-                                  : Icons.vpn_key_rounded,
-                              color: item.tipo == 'pasta'
-                                  ? AppColors.pasta
-                                  : item.tipo == 'documento'
-                                  ? AppColors.doc
-                                  : AppColors.primaria,
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.nome,
-                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: cs.onPrimary,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  if (item.tipo == 'senha') ...[
-                                    const SizedBox(height: 6),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.15),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Text(
-                                        isVisible ? item.senha!.senha : '••••••••',
-                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          color: cs.onPrimary?.withOpacity(0.85),
-                                          letterSpacing: 2,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                  if (item.tipo == 'documento') ...[
-                                    const SizedBox(height: 6),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.15),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Text(
-                                        isVisible ? item.documento!.numero : '••••••••',
-                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          color: cs.onPrimary?.withOpacity(0.85),
-                                          letterSpacing: 2,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.star_rounded,
-                                color: item.favorito ? Colors.amber : Colors.grey,
-                              ),
-                              tooltip: item.favorito ? s.favoriteTooltip : s.markFavoriteTooltip,
-                              onPressed: toggleFavorito,
-                            ),
-                            if (item.tipo == 'senha')
-                              IconButton(
-                                  icon: const Icon(Icons.copy_rounded, color: Colors.grey),
-                                  tooltip: s.copyPasswordTooltip,
-                                  onPressed: () {
-                                    Clipboard.setData(
-                                      ClipboardData(text: item.senha!.senha),
-                                    );
-                                    mostrarNotificacao(
-                                        context: context,
-                                        mensagem: s.passwordCopiedNotification,
-                                        background: AppColors.primaria.withOpacity(0.8)
-                                    );
-                                  }
-                              ),
-                            if (item.tipo == 'documento')
-                              IconButton(
-                                  icon: const Icon(Icons.copy_rounded, color: Colors.grey),
-                                  tooltip: s.copyDocumentNumberTooltip,
-                                  onPressed: () {
-                                    Clipboard.setData(
-                                      ClipboardData(text: item.documento!.numero),
-                                    );
-                                    mostrarNotificacao(
-                                        context: context,
-                                        mensagem: s.documentNumberCopiedNotification,
-                                        background: AppColors.doc.withOpacity(0.8)
-                                    );
-                                  }
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }
-              ),
-            ),
-          ),
-        ]
+        ],
       ),
-      floatingActionButton: Stack(
-        alignment: Alignment.bottomLeft,
-        children: [
-          Positioned(
-            bottom: 16,
-            left: 30,
-            child: FilterButton(
-              label: s.filtersButtonLabel,
-              active: filtro != 'todos',
+
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton.small(
+              heroTag: 'filter',
+              backgroundColor: AppColors.wood,
+              foregroundColor: AppColors.brass,
               onPressed: () async {
                 final tiposSelecionados = await showDialog<Set<String>>(
                   context: context,
@@ -439,62 +405,41 @@ class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMix
                         : filtro.split(',').toSet(),
                   ),
                 );
-
                 if (tiposSelecionados != null) {
                   setState(() {
-                    filtro = tiposSelecionados.length == 3
-                        ? 'todos'
-                        : tiposSelecionados.join(',');
+                    filtro = tiposSelecionados.length == 3 ? 'todos' : tiposSelecionados.join(',');
                   });
                 }
               },
+              child: const Icon(Icons.filter_list_rounded),
             ),
-          ),
-          Positioned(
-            bottom: 16,
-            left: 140,
-            child: FloatingActionButton.extended(
-              heroTag: 'search',
-              tooltip: mostrandoBusca ? s.closeButtonTooltip : s.searchHintText,
+            const SizedBox(width: 12),
+            FloatingActionButton.small(
+              heroTag: 'search_vault',
+              backgroundColor: mostrandoBusca ? AppColors.terciaria : AppColors.wood,
+              foregroundColor: AppColors.brass,
               onPressed: _toggleBusca,
-              icon: Icon(mostrandoBusca ? Icons.close_rounded : Icons.search_rounded),
-              label: Text(
-                mostrandoBusca ? s.closeButtonTooltip : s.searchButtonText,
-                style: const TextStyle(fontSize: 16),
-              ),
-              backgroundColor: mostrandoBusca ? AppColors.terciaria : AppColors.primaria,
-              foregroundColor: AppColors.fundo,
+              child: Icon(mostrandoBusca ? Icons.close_rounded : Icons.search_rounded),
             ),
-          ),
-          Positioned(
-            bottom: 16,
-            right: 0,
-            child: FloatingActionButton(
+            const SizedBox(width: 12),
+            FloatingActionButton.extended(
+              heroTag: 'add_vault',
+              backgroundColor: selecionando ? AppColors.terciaria : AppColors.mel,
+              foregroundColor: selecionando ? Colors.white : Colors.black,
               onPressed: () async {
                 if (selecionando) {
-                  await deletarSelecionadosGenerico(
-                    context: context,
-                    cofre: widget.cofre,
-                    selecionados: selecionados,
-                  );
+                  await deletarSelecionadosGenerico(context: context, cofre: widget.cofre, selecionados: selecionados);
                   _cancelarSelecao();
                 } else {
-                  await showAddOptionDialog(
-                    context: context,
-                    parentPastaId: widget.pasta.id,
-                    cofre: widget.cofre,
-                    onUpdate: () => setState(() {}),
-                  );
+                  await showAddOptionDialog(context: context, parentPastaId: widget.pasta.id, cofre: widget.cofre, onUpdate: () => setState(() {}));
                 }
               },
-              backgroundColor: selecionando ? AppColors.terciaria : cs.secondary,
-              foregroundColor: cs.onSecondary,
-              tooltip:
-              selecionando ? s.deleteSelectedItemsTooltip : s.addNewItemTooltip,
-              child: Icon(selecionando ? Icons.delete_rounded : Icons.add_rounded, size: 32),
+              icon: Icon(selecionando ? Icons.delete_outline_rounded : Icons.add_rounded),
+              label: Text(selecionando ? s.apagar : s.confirmButtonText.split(' ')[0]),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
