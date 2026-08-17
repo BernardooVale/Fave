@@ -3,13 +3,13 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../../cores.dart';
 import '../ed.dart';
+import '../cofre.dart';
 import 'fotoCriptografia.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../generated/l10n.dart';
 
 /// Exibe uma imagem [foto] ampliada em um diálogo.
-/// Inclui botões para fechar e compartilhar a imagem.
 void mostrarFotoAmpliada(BuildContext context, Uint8List foto) {
   final s = S.of(context);
 
@@ -22,15 +22,12 @@ void mostrarFotoAmpliada(BuildContext context, Uint8List foto) {
         borderRadius: BorderRadius.circular(16),
         child: Stack(
           children: [
-            // Imagem exibida em toda área do diálogo
             Positioned.fill(
               child: Image.memory(
                 foto,
                 fit: BoxFit.contain,
               ),
             ),
-
-            // Botão para fechar o diálogo, posicionado no canto inferior direito
             Positioned(
               bottom: 40,
               right: 24,
@@ -49,8 +46,6 @@ void mostrarFotoAmpliada(BuildContext context, Uint8List foto) {
                 ),
               ),
             ),
-
-            // Botão para compartilhar a imagem, posicionado no canto inferior esquerdo
             Positioned(
               bottom: 40,
               left: 24,
@@ -64,7 +59,6 @@ void mostrarFotoAmpliada(BuildContext context, Uint8List foto) {
                   child: IconButton(
                     icon: const Icon(Icons.share_rounded, color: AppColors.fundo, size: 32),
                     onPressed: () async {
-                      // Cria arquivo temporário com a imagem para compartilhamento
                       final tempDir = await getTemporaryDirectory();
                       final file = await File('${tempDir.path}/imagem.jpg').create();
                       await file.writeAsBytes(foto);
@@ -82,24 +76,18 @@ void mostrarFotoAmpliada(BuildContext context, Uint8List foto) {
   );
 }
 
-/// Exibe um BottomSheet modal para mostrar detalhes do documento,
-/// incluindo dados textuais e fotos descriptografadas.
-/// Realiza teste inicial para descriptografar a primeira foto e detectar possíveis erros.
-Future<void> documentoDialog(BuildContext context, Documento documento) async {
-  // Se o documento possui fotos criptografadas, tenta descriptografar a primeira foto para checar erros logo no início
-  if (documento.fotosCriptografadas.isNotEmpty) {
-    final primeiraFoto = documento.fotosCriptografadas.first;
-    try {
-      debugPrint('🧪 Teste no init: Tentando descriptografar primeira foto...');
-      final descriptografada = await descriptografar(primeiraFoto);
-      debugPrint('✅ Sucesso ao descriptografar primeira foto! Tamanho: ${descriptografada.length}');
-    } catch (e, stack) {
-      debugPrint('❌ Erro ao descriptografar primeira foto no init: $e');
-      debugPrint('🔍 Stack: $stack');
-    }
-  }
+/// Exibe um BottomSheet modal para mostrar detalhes do documento.
+/// As fotos são carregadas sob demanda da box de fotos.
+Future<void> documentoDialog(BuildContext context, Documento documento, UserCofre cofre) async {
+  // Busca as fotos na box separada
+  final fotosLegado = documento.fotosCriptografadas; // Pode ter fotos se acabou de ser migrado ou criado
+  final fotosNaBox = cofre.fotos.get(documento.id);
+  
+  final List<Uint8List> todasFotosCripto = [
+    if (fotosLegado != null) ...fotosLegado,
+    if (fotosNaBox != null) ...fotosNaBox.cast<Uint8List>(),
+  ];
 
-  // Exibe o BottomSheet com conteúdo do documento
   await showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -112,7 +100,7 @@ Future<void> documentoDialog(BuildContext context, Documento documento) async {
 
       return Padding(
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 24, // Ajusta padding para teclado
+          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
           left: 24,
           right: 24,
           top: 24,
@@ -122,7 +110,6 @@ Future<void> documentoDialog(BuildContext context, Documento documento) async {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Título com nome do documento
               Text(
                 documento.nome,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -132,42 +119,35 @@ Future<void> documentoDialog(BuildContext context, Documento documento) async {
               ),
               const SizedBox(height: 20),
 
-              // Campos de informação usando widget auxiliar 'info'
               info(s.numero, documento.numero),
 
-              // Exibe campo órgão expedidor se preenchido
               if (documento.orgaoExpedidor?.isNotEmpty == true)
                 ...[const SizedBox(height: 12), info(s.orgao, documento.orgaoExpedidor!)],
 
-              // Exibe data de emissão, formatada
               if (documento.dataEmissao != null)
                 ...[const SizedBox(height: 12), info(s.dataEmissao, s.dateDisplay(documento.dataEmissao!))],
 
-              // Exibe data de vencimento, formatada
               if (documento.dataVencimento != null)
                 ...[const SizedBox(height: 12), info(s.dataVencimento, s.dateDisplay(documento.dataVencimento!))],
 
               const SizedBox(height: 24),
 
-              // Lista horizontal de fotos descriptografadas
-              if (documento.fotosCriptografadas.isNotEmpty)
+              if (todasFotosCripto.isNotEmpty)
                 SizedBox(
                   height: 200,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    itemCount: documento.fotosCriptografadas.length,
+                    itemCount: todasFotosCripto.length,
                     separatorBuilder: (_, __) => const SizedBox(width: 12),
                     itemBuilder: (context, index) {
-                      final fotoCriptografada = documento.fotosCriptografadas[index];
-                      debugPrint("📸 fotoCriptografada[$index] hash: ${fotoCriptografada.hashCode}");
+                      final fotoCriptografada = todasFotosCripto[index];
 
                       return FutureBuilder<Uint8List>(
                         future: descriptografar(fotoCriptografada),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            // Exibe indicador de carregamento enquanto descriptografa
                             return Container(
-                              width: 100,
+                              width: 150,
                               height: 100,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
@@ -180,10 +160,8 @@ Future<void> documentoDialog(BuildContext context, Documento documento) async {
                               ),
                             );
                           } else if (snapshot.hasError || !snapshot.hasData) {
-                            // Caso ocorra erro na descriptografia, exibe ícone de erro
-                            debugPrint('❌ Erro ao descriptografar imagem[$index]: ${snapshot.error}');
                             return Container(
-                              width: 100,
+                              width: 150,
                               height: 100,
                               decoration: BoxDecoration(
                                 color: Colors.white10,
@@ -194,7 +172,6 @@ Future<void> documentoDialog(BuildContext context, Documento documento) async {
                           }
 
                           final foto = snapshot.data!;
-                          // Exibe foto em card clicável para ampliar
                           return GestureDetector(
                             onTap: () => mostrarFotoAmpliada(context, foto),
                             child: Card(
@@ -204,7 +181,7 @@ Future<void> documentoDialog(BuildContext context, Documento documento) async {
                               child: Image.memory(
                                 foto,
                                 width: 150,
-                                height: 100,
+                                height: 200,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -217,7 +194,6 @@ Future<void> documentoDialog(BuildContext context, Documento documento) async {
 
               const SizedBox(height: 12),
 
-              // Botão para fechar o BottomSheet
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -241,8 +217,6 @@ Future<void> documentoDialog(BuildContext context, Documento documento) async {
   );
 }
 
-/// Widget auxiliar que exibe um rótulo [label] e um valor [valor] formatado,
-/// usado para exibir as informações do documento com estilo consistente.
 Widget info(String label, String valor) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,11 +1,10 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 
 import '../cores.dart';
 import '../ed.dart';
+import '../cofre.dart';
 import '../itens/item.dart';
 import '../notificacao/notificacao.dart';
 import 'documentoDialog.dart';
@@ -18,13 +17,13 @@ import '../generated/l10n.dart';
 
 class PastaPage extends StatefulWidget {
   final Pasta pasta;
-  final Box<Usuario> userBox;
+  final UserCofre cofre;
   final bool isVisibleIni;
 
   const PastaPage({
     Key? key,
     required this.pasta,
-    required this.userBox,
+    required this.cofre,
     this.isVisibleIni = false,
   }) : super(key: key);
 
@@ -120,9 +119,9 @@ class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMix
     final s = S.of(context);
 
     final List<Item> todosItens = [
-      if (pasta.subpastas != null) ...pasta.subpastas!.map((p) => Item.pasta(p)),
-      if (pasta.senhas != null) ...pasta.senhas!.map((s) => Item.senha(s)),
-      if (pasta.documentos != null) ...pasta.documentos!.map((s) => Item.documento(s))
+      ...widget.cofre.pastas.values.where((p) => p.parentPastaId == pasta.id).map((p) => Item.pasta(p)),
+      ...widget.cofre.senhas.values.where((s) => s.parentPastaId == pasta.id).map((s) => Item.senha(s)),
+      ...widget.cofre.documentos.values.where((d) => d.parentPastaId == pasta.id).map((d) => Item.documento(d))
     ];
 
     final Map<String, String> pluralToSingular = {
@@ -224,7 +223,7 @@ class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMix
                   ),
                 )
                 : ListView.builder(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 controller: _scrollController,
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                 reverse: true,
@@ -236,12 +235,14 @@ class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMix
                   Future<void> toggleFavorito() async {
                     if (item.tipo == 'pasta') {
                       item.pasta!.favorito = !item.pasta!.favorito;
+                      await widget.cofre.pastas.put(item.pasta!.id, item.pasta!);
                     } else if (item.tipo == 'senha') {
                       item.senha!.favorito = !item.senha!.favorito;
+                      await widget.cofre.senhas.put(item.senha!.id, item.senha!);
                     } else if (item.tipo == 'documento') {
                       item.documento!.favorito = !item.documento!.favorito;
+                      await widget.cofre.documentos.put(item.documento!.id, item.documento!);
                     }
-                    await widget.userBox.putAt(0, widget.userBox.values.first);
                     setState(() {});
                   }
 
@@ -276,7 +277,7 @@ class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMix
                             MaterialPageRoute(
                               builder: (_) => PastaPage(
                                 pasta: item.pasta!,
-                                userBox: widget.userBox,
+                                cofre: widget.cofre,
                                 isVisibleIni: isVisible,
                               ),
                             ),
@@ -289,14 +290,13 @@ class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMix
                             onConfirmar: (novoNome, novaSenha) async {
                               item.senha!.nome = novoNome;
                               item.senha!.senha = novaSenha;
-
-                              final usuario = widget.userBox.values.first;
-                              await widget.userBox.putAt(0, usuario);
+                              item.senha!.ultimaModificacao = DateTime.now();
+                              await widget.cofre.senhas.put(item.senha!.id, item.senha!);
                               setState(() {});
                             },
                           );
                         } else if (item.tipo == 'documento') {
-                          documentoDialog(context, item.documento!);
+                          documentoDialog(context, item.documento!, widget.cofre);
                         }
                       },
                       child: Padding(
@@ -474,16 +474,15 @@ class _PastaPageState extends State<PastaPage> with SingleTickerProviderStateMix
                 if (selecionando) {
                   await deletarSelecionadosGenerico(
                     context: context,
-                    target: widget.pasta,
-                    userBox: widget.userBox,
+                    cofre: widget.cofre,
                     selecionados: selecionados,
                   );
                   _cancelarSelecao();
                 } else {
                   await showAddOptionDialog(
                     context: context,
-                    target: widget.pasta,
-                    userBox: widget.userBox,
+                    parentPastaId: widget.pasta.id,
+                    cofre: widget.cofre,
                     onUpdate: () => setState(() {}),
                   );
                 }

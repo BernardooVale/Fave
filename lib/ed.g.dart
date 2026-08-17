@@ -66,13 +66,15 @@ class PastaAdapter extends TypeAdapter<Pasta> {
       documentos: (fields[3] as List?)?.cast<Documento>(),
       ultimaModificacao: fields[4] as DateTime?,
       favorito: fields[5] as bool,
+      id: fields[6] as String?,
+      parentPastaId: fields[7] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Pasta obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.nome)
       ..writeByte(1)
@@ -84,7 +86,11 @@ class PastaAdapter extends TypeAdapter<Pasta> {
       ..writeByte(4)
       ..write(obj.ultimaModificacao)
       ..writeByte(5)
-      ..write(obj.favorito);
+      ..write(obj.favorito)
+      ..writeByte(6)
+      ..write(obj.id)
+      ..writeByte(7)
+      ..write(obj.parentPastaId);
   }
 
   @override
@@ -113,13 +119,15 @@ class SenhaAdapter extends TypeAdapter<Senha> {
       senha: fields[1] as String,
       ultimaModificacao: fields[2] as DateTime?,
       favorito: fields[3] as bool,
+      id: fields[4] as String?,
+      parentPastaId: fields[5] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Senha obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.nome)
       ..writeByte(1)
@@ -127,7 +135,11 @@ class SenhaAdapter extends TypeAdapter<Senha> {
       ..writeByte(2)
       ..write(obj.ultimaModificacao)
       ..writeByte(3)
-      ..write(obj.favorito);
+      ..write(obj.favorito)
+      ..writeByte(4)
+      ..write(obj.id)
+      ..writeByte(5)
+      ..write(obj.parentPastaId);
   }
 
   @override
@@ -160,13 +172,15 @@ class DocumentoAdapter extends TypeAdapter<Documento> {
       ultimaModificacao: fields[5] as DateTime?,
       favorito: fields[6] as bool,
       fotosCriptografadas: (fields[7] as List?)?.cast<Uint8List>(),
+      id: fields[8] as String?,
+      parentPastaId: fields[9] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Documento obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.nome)
       ..writeByte(1)
@@ -182,7 +196,11 @@ class DocumentoAdapter extends TypeAdapter<Documento> {
       ..writeByte(6)
       ..write(obj.favorito)
       ..writeByte(7)
-      ..write(obj.fotosCriptografadas);
+      ..write(obj.fotosCriptografadas)
+      ..writeByte(8)
+      ..write(obj.id)
+      ..writeByte(9)
+      ..write(obj.parentPastaId);
   }
 
   @override

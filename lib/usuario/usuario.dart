@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 
 import '../ed.dart';
 import '../cores.dart';
+import '../cofre.dart';
 
 import '../itens/item.dart';
 import 'editSenha.dart';
@@ -20,13 +21,12 @@ class UsuarioPage extends StatefulWidget {
   final String userId;
   const UsuarioPage({Key? key, required this.userId}) : super(key: key);
 
-
   @override
   State<UsuarioPage> createState() => _UsuarioPageState();
 }
 
 class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStateMixin {
-  late Box<Usuario> userBox;
+  late UserCofre cofre;
   bool loading = true;
 
   bool isVisible = false;
@@ -47,7 +47,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _loadUserBox();
+    _loadCofre();
 
     _fadeController = AnimationController(
       vsync: this,
@@ -57,8 +57,8 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
     _fadeController.forward();
   }
 
-  Future<void> _loadUserBox() async {
-    userBox = await _openUserBox(widget.userId);
+  Future<void> _loadCofre() async {
+    cofre = await openUserCofre(widget.userId);
     setState(() => loading = false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -68,15 +68,8 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
     });
   }
 
-  Future<Box<Usuario>> _openUserBox(String userId) async {
-    final name = 'user_$userId';
-    if (Hive.isBoxOpen(name)) return Hive.box<Usuario>(name);
-    return Hive.openBox<Usuario>(name);
-  }
-
   @override
   void dispose() {
-    if (userBox.isOpen) userBox.close();
     _searchController.dispose();
     _searchFocus.dispose();
     _scrollController.dispose();
@@ -130,15 +123,11 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
       );
     }
 
-    final usuario = userBox.values.isNotEmpty ? userBox.values.first : null;
-    if (usuario == null) {
-      return Scaffold(body: Center(child: Text(s.perfilNaoEncontrado)));
-    }
-
+    // Na raiz, buscamos itens onde parentPastaId é null
     final List<Item> todosItens = [
-      if (usuario.pastas != null) ...usuario.pastas!.map((p) => Item.pasta(p)),
-      if (usuario.senhas != null) ...usuario.senhas!.map((s) => Item.senha(s)),
-      if (usuario.documentos != null) ...usuario.documentos!.map((s) => Item.documento(s))
+      ...cofre.pastas.values.where((p) => p.parentPastaId == null).map((p) => Item.pasta(p)),
+      ...cofre.senhas.values.where((s) => s.parentPastaId == null).map((s) => Item.senha(s)),
+      ...cofre.documentos.values.where((d) => d.parentPastaId == null).map((d) => Item.documento(d))
     ];
 
     final Map<String, String> pluralToSingular = {
@@ -169,7 +158,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
       appBar: AppBar(
         title: selecionando
             ? Text(s.selectedItemsCount(selecionados.length))
-            : Text(usuario.nome, style: const TextStyle(fontWeight: FontWeight.bold)),
+            : Text(widget.userId, style: const TextStyle(fontWeight: FontWeight.bold)),
         leading: selecionando
             ? IconButton(icon: const Icon(Icons.close_rounded), onPressed: _cancelarSelecao)
             : null,
@@ -252,12 +241,14 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
                   Future<void> toggleFavorito() async {
                     if (item.tipo == 'pasta') {
                       item.pasta!.favorito = !item.pasta!.favorito;
+                      await cofre.pastas.put(item.pasta!.id, item.pasta!);
                     } else if (item.tipo == 'senha') {
                       item.senha!.favorito = !item.senha!.favorito;
+                      await cofre.senhas.put(item.senha!.id, item.senha!);
                     } else if (item.tipo == 'documento') {
                       item.documento!.favorito = !item.documento!.favorito;
+                      await cofre.documentos.put(item.documento!.id, item.documento!);
                     }
-                    await userBox.putAt(0, usuario);
                     setState(() {});
                   }
 
@@ -287,7 +278,7 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
                             MaterialPageRoute(
                               builder: (_) => PastaPage(
                                 pasta: item.pasta!,
-                                userBox: userBox,
+                                cofre: cofre,
                                 isVisibleIni: isVisible,
                               ),
                             ),
@@ -300,12 +291,13 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
                             onConfirmar: (novoNome, novaSenha) async {
                               item.senha!.nome = novoNome;
                               item.senha!.senha = novaSenha;
-                              await userBox.putAt(0, usuario);
+                              item.senha!.ultimaModificacao = DateTime.now();
+                              await cofre.senhas.put(item.senha!.id, item.senha!);
                               setState(() {});
                             },
                           );
                         } else if (item.tipo == 'documento') {
-                          documentoDialog(context, item.documento!);
+                          documentoDialog(context, item.documento!, cofre);
                         }
                       },
                       child: Padding(
@@ -485,16 +477,15 @@ class _UsuarioPageState extends State<UsuarioPage> with SingleTickerProviderStat
                 if (selecionando) {
                   await deletarSelecionadosGenerico(
                     context: context,
-                    target: usuario,
-                    userBox: userBox,
+                    cofre: cofre,
                     selecionados: selecionados,
                   );
                   setState(() => selecionados.clear());
                 } else {
                   await showAddOptionDialog(
                     context: context,
-                    target: usuario,
-                    userBox: userBox,
+                    parentPastaId: null,
+                    cofre: cofre,
                     onUpdate: () => setState(() {}),
                   );
                 }

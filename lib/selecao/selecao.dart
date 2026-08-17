@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../ed.dart';
 import '../cofre.dart';
+import '../services/migration_service.dart';
 import '../usuario/usuario.dart';
 import 'novoUsuarioDialog.dart';
 import '../cores.dart';
@@ -250,7 +251,20 @@ class _SelecaoState extends State<Selecao> with SingleTickerProviderStateMixin {
                               }
                             });
                           } else {
-                            await openEncryptedUserBox(u.nome);
+                            // Inicia a migração se necessário
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) => const Center(child: CircularProgressIndicator()),
+                            );
+                            
+                            try {
+                              await MigrationService.migrateUser(u.nome);
+                              await openUserCofre(u.nome);
+                            } finally {
+                              if (context.mounted) Navigator.pop(context); // Fecha o loading
+                            }
+
                             if (context.mounted) {
                               Navigator.of(context).push(
                                 MaterialPageRoute(

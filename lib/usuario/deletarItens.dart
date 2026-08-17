@@ -1,71 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import '../ed.dart';
+import '../cofre.dart';
 import '../itens/item.dart';
 import '../generated/l10n.dart';
 
-/// Função genérica para deletar múltiplos itens selecionados de um [Usuario] ou uma [Pasta].
-/// Mostra um diálogo de confirmação e, se confirmado, remove os itens e atualiza o Hive.
+/// Função genérica para deletar múltiplos itens selecionados.
+/// Realiza exclusão recursiva para pastas.
 Future<void> deletarSelecionadosGenerico({
   required BuildContext context,
-  required dynamic target, // Pode ser Usuario ou Pasta
-  required Box<Usuario> userBox,
+  required UserCofre cofre,
   required Set<Item> selecionados,
 }) async {
-  // Exibe diálogo de confirmação
   final confirm = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final s = S.of(context); // Traduções
+        final s = S.of(context);
 
         return AlertDialog(
           title: Text(s.confirmarExclusaoItems),
-          content: Text(s.deleteItemsConfirm(selecionados.length)), // Exibe número de itens
+          content: Text(s.deleteItemsConfirm(selecionados.length)),
           actions: [
-            // Botão cancelar
             TextButton(
               onPressed: () => Navigator.pop(context, false),
               child: Text(s.cancelButtonText),
             ),
-            // Botão excluir
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text(s.excluir, style: TextStyle(color: Colors.red)),
+              child: Text(s.excluir, style: const TextStyle(color: Colors.red)),
             ),
           ],
         );
       }
   );
 
-  if (confirm != true) return; // Usuário cancelou
+  if (confirm != true) return;
 
-  // Remoção dos itens selecionados com base no tipo do target
-  if (target is Usuario) {
-    // Filtra os itens que *não* estão na seleção e atualiza listas
-    target.pastas = target.pastas
-        ?.where((p) => !selecionados.contains(Item.pasta(p)))
-        .toList();
-    target.senhas = target.senhas
-        ?.where((s) => !selecionados.contains(Item.senha(s)))
-        .toList();
-    target.documentos = target.documentos
-        ?.where((s) => !selecionados.contains(Item.documento(s)))
-        .toList();
-  } else if (target is Pasta) {
-    target.subpastas = target.subpastas
-        ?.where((p) => !selecionados.contains(Item.pasta(p)))
-        .toList();
-    target.senhas = target.senhas
-        ?.where((s) => !selecionados.contains(Item.senha(s)))
-        .toList();
-    target.documentos = target.documentos
-        ?.where((s) => !selecionados.contains(Item.documento(s)))
-        .toList();
-  } else {
-    // Caso seja passado um tipo inesperado, lança exceção
-    throw Exception('Tipo de target não suportado: ${target.runtimeType}');
+  for (final item in selecionados) {
+    if (item.tipo == 'pasta') {
+      await _deletarPastaRecursivo(item.pasta!, cofre);
+    } else if (item.tipo == 'senha') {
+      await cofre.senhas.delete(item.senha!.id);
+    } else if (item.tipo == 'documento') {
+      await cofre.documentos.delete(item.documento!.id);
+      await cofre.fotos.delete(item.documento!.id);
+    }
+  }
+}
+
+/// Remove uma pasta e todos os seus subitens recursivamente.
+Future<void> _deletarPastaRecursivo(Pasta pasta, UserCofre cofre) async {
+  // Busca e remove subpastas
+  final subpastas = cofre.pastas.values
+      .where((p) => p.parentPastaId == pasta.id)
+      .toList();
+  for (final sub in subpastas) {
+    await _deletarPastaRecursivo(sub, cofre);
   }
 
-  // Atualiza o Hive com os dados modificados do usuário
-  await userBox.putAt(0, userBox.values.first);
+  // Busca e remove senhas
+  final senhasIds = cofre.senhas.values
+      .where((s) => s.parentPastaId == pasta.id)
+      .map((s) => s.id)
+      .toList();
+  for (final id in senhasIds) {
+    await cofre.senhas.delete(id);
+  }
+
+  // Busca e remove documentos (e suas fotos)
+  final documentosIds = cofre.documentos.values
+      .where((d) => d.parentPastaId == pasta.id)
+      .map((d) => d.id)
+      .toList();
+  for (final id in documentosIds) {
+    await cofre.documentos.delete(id);
+    await cofre.fotos.delete(id);
+  }
+
+  // Remove a própria pasta
+  await cofre.pastas.delete(pasta.id);
 }
